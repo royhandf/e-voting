@@ -1,6 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { SidebarContext } from "../context/SidebarContext";
-import { ThemeContext } from "../context/ThemeContext"; // Ubah ini!
+import { ThemeContext } from "../context/ThemeContext";
 import { FaSearch, FaMoon, FaSun } from "react-icons/fa";
 import {
     IoMenu,
@@ -8,22 +8,17 @@ import {
     IoCogOutline,
     IoLogOut,
 } from "react-icons/io5";
+import { Avatar, Input } from "@windmill/react-ui";
 import {
-    Avatar,
-    Badge,
-    Input,
-    Dropdown,
-    DropdownItem,
-} from "@windmill/react-ui";
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/Components/Dropdown/DropdownMenu";
 
 function Header() {
-    const { theme, toggleTheme } = useContext(ThemeContext); // Ganti WindmillContext ke ThemeContext
+    const { theme, toggleTheme } = useContext(ThemeContext);
     const { toggleSidebar } = useContext(SidebarContext);
-    const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-
-    function handleProfileClick() {
-        setIsProfileMenuOpen(!isProfileMenuOpen);
-    }
 
     return (
         <header className="z-40 py-4 bg-white shadow-sm dark:bg-gray-800">
@@ -53,7 +48,6 @@ function Header() {
                         <button
                             className="rounded-md focus:outline-none focus:shadow-outline-purple"
                             onClick={() => {
-                                console.log("Toggling mode...", theme);
                                 toggleTheme();
                             }}
                             aria-label="Toggle color mode"
@@ -71,46 +65,35 @@ function Header() {
 
                     {/* <!-- Profile menu --> */}
                     <li className="relative">
-                        <button
-                            className="rounded-full focus:shadow-outline-purple focus:outline-none"
-                            onClick={handleProfileClick}
-                            aria-label="Account"
-                            aria-haspopup="true"
-                        >
-                            <Avatar
-                                className="align-middle h-8 w-8"
-                                src="https://images.unsplash.com/photo-1502378735452-bc7d86632805?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&s=aa3a807e1bbdfd4364d1f449eaa96d82"
-                                alt=""
-                                aria-hidden="true"
-                            />
-                        </button>
-                        <Dropdown
-                            align="right"
-                            isOpen={isProfileMenuOpen}
-                            onClose={() => setIsProfileMenuOpen(false)}
-                        >
-                            <DropdownItem tag="a" href="#">
-                                <IoPersonOutline
-                                    className="w-4 h-4 mr-3"
-                                    aria-hidden="true"
-                                />
-                                <span>Profile</span>
-                            </DropdownItem>
-                            <DropdownItem tag="a" href="#">
-                                <IoCogOutline
-                                    className="w-4 h-4 mr-3"
-                                    aria-hidden="true"
-                                />
-                                <span>Settings</span>
-                            </DropdownItem>
-                            <DropdownItem onClick={() => alert("Log out!")}>
-                                <IoLogOut
-                                    className="w-4 h-4 mr-3"
-                                    aria-hidden="true"
-                                />
-                                <span>Log out</span>
-                            </DropdownItem>
-                        </Dropdown>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <button className="rounded-full focus:shadow-outline-purple focus:outline-none">
+                                    <Avatar
+                                        className="align-middle h-8 w-8"
+                                        src="https://images.unsplash.com/photo-1502378735452-bc7d86632805?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&s=aa3a807e1bbdfd4364d1f449eaa96d82"
+                                        alt="User Avatar"
+                                        aria-hidden="true"
+                                    />
+                                </button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem>
+                                    <IoPersonOutline className="w-4 h-4 mr-3" />
+                                    Profile
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <IoCogOutline className="w-4 h-4 mr-3" />
+                                    Settings
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                    onClick={() => alert("Log out!")}
+                                    className="text-red-600"
+                                >
+                                    <IoLogOut className="w-4 h-4 mr-3" />
+                                    Log out
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </li>
                 </ul>
             </div>
