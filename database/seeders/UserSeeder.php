@@ -19,6 +19,14 @@ class UserSeeder extends Seeder
             'role' => 'admin',
         ]);
 
+        User::create([
+            'id' => Str::uuid(),
+            'name' => 'Royhan Daffa',
+            'nim' => '1234',
+            'password' => Hash::make('taikucing'),
+            'role' => 'user',
+        ]);
+
         User::factory()->count(10)->create();
     }
 }
