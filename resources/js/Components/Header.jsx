@@ -10,13 +10,34 @@ import {
 } from "react-icons/io5";
 import Dropdown from "./Dropdown";
 import Avatar from "./Avatar";
-import { usePage } from "@inertiajs/react";
+import { usePage, router } from "@inertiajs/react";
+import Swal from "sweetalert2";
 
 function Header() {
     const { theme, toggleTheme } = useContext(ThemeContext);
     const { toggleSidebar } = useContext(SidebarContext);
     const { auth } = usePage().props;
 
+    const handleLogout = (e) => {
+        e.preventDefault();
+        const isDarkMode = document.documentElement.classList.contains("dark");
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You will be logged out!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, log out!",
+            background: isDarkMode ? "#1a202c" : "#fff",
+            color: isDarkMode ? "#fff" : "#000",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.post(route("logout"));
+            }
+        });
+    };
     return (
         <header className="z-40 py-4 bg-white shadow-sm dark:bg-gray-800">
             <div className="container flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300">
@@ -73,6 +94,7 @@ function Header() {
                                     method="post"
                                     as="button"
                                     className="text-red-600 flex items-center"
+                                    onClick={handleLogout}
                                 >
                                     <IoLogOut className="mr-3" />
                                     Log Out
