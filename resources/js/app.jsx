@@ -5,6 +5,7 @@ import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { createRoot } from "react-dom/client";
 import { ThemeProvider } from "./Context/ThemeContext";
 import { SidebarProvider } from "./Context/SidebarContext";
+import "@fontsource/inter";
 
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
