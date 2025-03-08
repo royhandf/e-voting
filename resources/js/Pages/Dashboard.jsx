@@ -5,9 +5,9 @@ import { Head } from "@inertiajs/react";
 import { IoIosPeople } from "react-icons/io";
 import { FaMoneyBillWaveAlt, FaShoppingCart } from "react-icons/fa";
 import { IoChatboxEllipses } from "react-icons/io5";
-
 import response from "../Utils/tableData";
 import { useEffect, useState } from "react";
+import Pagination from "@/Components/Pagination";
 
 export default function Dashboard() {
     const [page, setPage] = useState(1);
@@ -70,13 +70,13 @@ export default function Dashboard() {
             </div>
 
             <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
-                <table className="w-full border-collapse bg-white dark:bg-gray-800 rounded-lg p-4">
+                <table className="w-full border-collapse bg-white dark:bg-gray-800 rounded-lg">
                     <thead>
                         <tr className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
-                            <th className="py-2 px-4 text-left">Client</th>
-                            <th className="py-2 px-4 text-left">Amount</th>
-                            <th className="py-2 px-4 text-left">Status</th>
-                            <th className="py-2 px-4 text-left">Date</th>
+                            <th className="py-3 px-4 text-left">Client</th>
+                            <th className="py-3 px-4 text-left">Amount</th>
+                            <th className="py-3 px-4 text-left">Status</th>
+                            <th className="py-3 px-4 text-left">Date</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -121,26 +121,15 @@ export default function Dashboard() {
                         ))}
                     </tbody>
                 </table>
-            </div>
 
-            <div className="flex justify-between items-center mt-4">
-                <button
-                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md disabled:opacity-50"
-                    onClick={() => setPage(page - 1)}
-                    disabled={page === 1}
-                >
-                    Previous
-                </button>
-                <span className="text-sm">
-                    Page {page} of {totalPages}
-                </span>
-                <button
-                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md disabled:opacity-50"
-                    onClick={() => setPage(page + 1)}
-                    disabled={page === totalPages}
-                >
-                    Next
-                </button>
+                {/* Pagination Info */}
+                <Pagination
+                    page={page}
+                    resultsPerPage={resultsPerPage}
+                    totalResults={totalResults}
+                    totalPages={totalPages}
+                    setPage={setPage}
+                />
             </div>
 
             <h1 className="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
