@@ -41,9 +41,9 @@ export default function Dashboard() {
 
     return (
         <AuthenticatedLayout>
-            <Head title="Dashboard" />
+            <Head title="Dashboard e-voting" />
             <h1 className="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-                Dashboard
+                Dashboard e-voting
             </h1>
 
             <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
