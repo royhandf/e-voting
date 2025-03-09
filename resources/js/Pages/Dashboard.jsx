@@ -5,20 +5,9 @@ import { Head } from "@inertiajs/react";
 import { IoIosPeople } from "react-icons/io";
 import { FaMoneyBillWaveAlt, FaShoppingCart } from "react-icons/fa";
 import { IoChatboxEllipses } from "react-icons/io5";
-import {
-    TableBody,
-    TableContainer,
-    Table,
-    TableHeader,
-    TableCell,
-    TableRow,
-    TableFooter,
-    Avatar,
-    Badge,
-    Pagination,
-} from "@windmill/react-ui";
 import response from "../Utils/tableData";
 import { useEffect, useState } from "react";
+import Pagination from "@/Components/Pagination";
 
 export default function Dashboard() {
     const [page, setPage] = useState(1);
@@ -27,11 +16,7 @@ export default function Dashboard() {
     // paginate setup
     const resultsPerPage = 5;
     const totalResults = response.length;
-
-    // pagination change control
-    function onPageChange(page) {
-        setPage(page);
-    }
+    const totalPages = Math.ceil(totalResults / resultsPerPage);
 
     useEffect(() => {
         setData(
@@ -84,66 +69,68 @@ export default function Dashboard() {
                 </InfoCard>
             </div>
 
-            <TableContainer>
-                <Table>
-                    <TableHeader>
-                        <tr>
-                            <TableCell>Client</TableCell>
-                            <TableCell>Amount</TableCell>
-                            <TableCell>Status</TableCell>
-                            <TableCell>Date</TableCell>
+            <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg p-4">
+                <table className="w-full border-collapse bg-white dark:bg-gray-800 rounded-lg">
+                    <thead>
+                        <tr className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
+                            <th className="py-3 px-4 text-left">Client</th>
+                            <th className="py-3 px-4 text-left">Amount</th>
+                            <th className="py-3 px-4 text-left">Status</th>
+                            <th className="py-3 px-4 text-left">Date</th>
                         </tr>
-                    </TableHeader>
-                    <TableBody>
+                    </thead>
+                    <tbody>
                         {data.map((user, i) => (
-                            <TableRow key={i}>
-                                <TableCell>
-                                    <div className="flex items-center text-sm">
-                                        <Avatar
-                                            className="hidden mr-3 md:block"
-                                            src={user.avatar}
-                                            alt="User image"
-                                        />
-                                        <div>
-                                            <p className="font-semibold">
-                                                {user.name}
-                                            </p>
-                                            <p className="text-xs text-gray-600 dark:text-gray-400">
-                                                {user.job}
-                                            </p>
-                                        </div>
+                            <tr
+                                key={i}
+                                className="border-t border-gray-200 dark:border-gray-700"
+                            >
+                                <td className="py-2 px-4 flex items-center text-gray-700 dark:text-gray-200">
+                                    <img
+                                        src={user.avatar}
+                                        alt="Avatar"
+                                        className="w-8 h-8 rounded-full mr-3"
+                                    />
+                                    <div>
+                                        <p className="font-semibold">
+                                            {user.name}
+                                        </p>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                                            {user.job}
+                                        </p>
                                     </div>
-                                </TableCell>
-                                <TableCell>
-                                    <span className="text-sm">
-                                        $ {user.amount}
-                                    </span>
-                                </TableCell>
-                                <TableCell>
-                                    <Badge type={user.status}>
+                                </td>
+                                <td className="py-2 px-4 text-gray-700 dark:text-gray-200">
+                                    ${user.amount}
+                                </td>
+                                <td className="py-2 px-4">
+                                    <span
+                                        className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                                            user.status === "Active"
+                                                ? "bg-green-100 dark:bg-green-600 text-green-600 dark:text-green-100"
+                                                : "bg-red-100 dark:bg-red-600 text-red-600 dark:text-red-100"
+                                        }`}
+                                    >
                                         {user.status}
-                                    </Badge>
-                                </TableCell>
-                                <TableCell>
-                                    <span className="text-sm">
-                                        {new Date(
-                                            user.date
-                                        ).toLocaleDateString()}
                                     </span>
-                                </TableCell>
-                            </TableRow>
+                                </td>
+                                <td className="py-2 px-4 text-gray-700 dark:text-gray-200">
+                                    {new Date(user.date).toLocaleDateString()}
+                                </td>
+                            </tr>
                         ))}
-                    </TableBody>
-                </Table>
-                <TableFooter>
-                    <Pagination
-                        totalResults={totalResults}
-                        resultsPerPage={resultsPerPage}
-                        label="Table navigation"
-                        onChange={onPageChange}
-                    />
-                </TableFooter>
-            </TableContainer>
+                    </tbody>
+                </table>
+
+                {/* Pagination Info */}
+                <Pagination
+                    page={page}
+                    resultsPerPage={resultsPerPage}
+                    totalResults={totalResults}
+                    totalPages={totalPages}
+                    setPage={setPage}
+                />
+            </div>
 
             <h1 className="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
                 Charts

@@ -1,5 +1,9 @@
+import Checkbox from "@/Components/Checkbox";
+import InputError from "@/Components/InputError";
+import InputLabel from "@/Components/InputLabel";
+import PrimaryButton from "@/Components/PrimaryButton";
+import TextInput from "@/Components/TextInput";
 import GuestLayout from "@/Layouts/GuestLayout";
-import { Label, Input, Button } from "@windmill/react-ui";
 import { Head, Link, useForm } from "@inertiajs/react";
 
 export default function Login({ status, canResetPassword }) {
@@ -27,75 +31,68 @@ export default function Login({ status, canResetPassword }) {
                 </div>
             )}
 
-            <form onSubmit={submit} className="space-y-4">
+            <form onSubmit={submit}>
                 <div>
-                    <Label>
-                        <span>NIM</span>
-                        <Input
-                            type="text"
-                            name="nim"
-                            value={data.nim}
-                            className="mt-1"
-                            autoComplete="username"
-                            onChange={(e) => setData("nim", e.target.value)}
-                        />
-                    </Label>
-                    {errors.nim && (
-                        <p className="text-red-600 text-sm mt-1">
-                            {errors.nim}
-                        </p>
-                    )}
+                    <InputLabel htmlFor="nim" value="NIM" />
+
+                    <TextInput
+                        id="nim"
+                        type="text"
+                        name="nim"
+                        value={data.nim}
+                        className="mt-1 block w-full"
+                        autoComplete="username"
+                        isFocused={true}
+                        onChange={(e) => setData("nim", e.target.value)}
+                    />
+
+                    <InputError message={errors.nim} className="mt-2" />
                 </div>
 
-                <div>
-                    <Label>
-                        <span>Password</span>
-                        <Input
-                            type="password"
-                            name="password"
-                            value={data.password}
-                            className="mt-1"
-                            autoComplete="current-password"
-                            onChange={(e) =>
-                                setData("password", e.target.value)
-                            }
-                        />
-                    </Label>
-                    {errors.password && (
-                        <p className="text-red-600 text-sm mt-1">
-                            {errors.password}
-                        </p>
-                    )}
+                <div className="mt-4">
+                    <InputLabel htmlFor="password" value="Password" />
+
+                    <TextInput
+                        id="password"
+                        type="password"
+                        name="password"
+                        value={data.password}
+                        className="mt-1 block w-full"
+                        autoComplete="current-password"
+                        onChange={(e) => setData("password", e.target.value)}
+                    />
+
+                    <InputError message={errors.password} className="mt-2" />
                 </div>
 
-                <div className="flex items-center">
-                    <Label className="flex items-center">
-                        <input
-                            type="checkbox"
+                <div className="mt-4 block">
+                    <label className="flex items-center">
+                        <Checkbox
+                            name="remember"
                             checked={data.remember}
                             onChange={(e) =>
                                 setData("remember", e.target.checked)
                             }
-                            className="form-checkbox h-3 w-3 text-blue-600"
                         />
-                        <span className="ml-2 text-sm text-gray-600">
+                        <span className="ms-2 text-sm text-gray-600 dark:text-gray-400">
                             Remember me
                         </span>
-                    </Label>
+                    </label>
                 </div>
 
-                <div className="flex items-center justify-between">
+                <div className="mt-4 flex items-center justify-end">
                     {canResetPassword && (
                         <Link
                             href={route("password.request")}
-                            className="text-sm text-gray-600 hover:underline"
+                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:text-gray-400 dark:hover:text-gray-100 dark:focus:ring-offset-gray-800"
                         >
                             Forgot your password?
                         </Link>
                     )}
-                    <Button type="submit" disabled={processing}>
+
+                    <PrimaryButton className="ms-4" disabled={processing}>
                         Log in
-                    </Button>
+                    </PrimaryButton>
                 </div>
             </form>
         </GuestLayout>

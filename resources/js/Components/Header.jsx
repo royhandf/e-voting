@@ -1,74 +1,77 @@
 import React, { useContext } from "react";
 import { SidebarContext } from "../context/SidebarContext";
 import { ThemeContext } from "../context/ThemeContext";
-import { FaSearch, FaMoon, FaSun } from "react-icons/fa";
+import { FaMoon, FaSun } from "react-icons/fa";
 import {
     IoMenu,
     IoPersonOutline,
     IoCogOutline,
     IoLogOut,
 } from "react-icons/io5";
-import { Avatar, Input } from "@windmill/react-ui";
 import Dropdown from "./Dropdown";
+import Avatar from "./Avatar";
+import { usePage, router } from "@inertiajs/react";
+import Swal from "sweetalert2";
 
 function Header() {
     const { theme, toggleTheme } = useContext(ThemeContext);
     const { toggleSidebar } = useContext(SidebarContext);
+    const { auth } = usePage().props;
 
+    const handleLogout = (e) => {
+        e.preventDefault();
+        const isDarkMode = document.documentElement.classList.contains("dark");
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You will be logged out!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, log out!",
+            background: isDarkMode ? "#1a202c" : "#fff",
+            color: isDarkMode ? "#fff" : "#000",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.post(route("logout"));
+            }
+        });
+    };
     return (
         <header className="z-40 py-4 bg-white shadow-sm dark:bg-gray-800">
             <div className="container flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300">
+                {/* Menu Button for Mobile */}
                 <button
-                    className="p-1 mr-5 -ml-1 rounded-md lg:hidden focus:outline-none focus:shadow-outline-purple"
+                    className="p-2 rounded-md lg:hidden focus:outline-none focus:ring"
                     onClick={toggleSidebar}
                     aria-label="Menu"
                 >
-                    <IoMenu className="w-6 h-6" aria-hidden="true" />
+                    <IoMenu className="w-6 h-6" />
                 </button>
-                <div className="flex justify-center flex-1 lg:mr-32">
-                    <div className="relative w-full max-w-xl mr-6 focus-within:text-purple-500">
-                        <div className="absolute inset-y-0 flex items-center pl-2">
-                            <FaSearch className="w-4 h-4" aria-hidden="true" />
-                        </div>
-                        <Input
-                            className="pl-8 text-gray-700"
-                            placeholder="Search for projects"
-                            aria-label="Search"
-                        />
-                    </div>
-                </div>
-                <ul className="flex items-center flex-shrink-0 space-x-6">
-                    {/* <!-- Theme toggler --> */}
-                    <li className="flex">
+
+                {/* Theme Toggler */}
+                <ul className="flex items-center space-x-6 ml-auto">
+                    <li>
                         <button
-                            className="rounded-md focus:outline-none focus:shadow-outline-purple"
-                            onClick={() => {
-                                toggleTheme();
-                            }}
+                            className="rounded-md focus:outline-none focus:ring"
+                            onClick={toggleTheme}
                             aria-label="Toggle color mode"
                         >
                             {theme === "dark" ? (
-                                <FaSun className="w-5 h-5" aria-hidden="true" />
+                                <FaSun className="w-5 h-5" />
                             ) : (
-                                <FaMoon
-                                    className="w-5 h-5"
-                                    aria-hidden="true"
-                                />
+                                <FaMoon className="w-5 h-5" />
                             )}
                         </button>
                     </li>
 
-                    {/* <!-- Profile menu --> */}
+                    {/* Profile Dropdown */}
                     <li className="relative">
                         <Dropdown>
                             <Dropdown.Trigger>
-                                <button className="rounded-full focus:shadow-outline-purple focus:outline-none">
-                                    <Avatar
-                                        className="align-middle h-8 w-8"
-                                        src="https://images.unsplash.com/photo-1502378735452-bc7d86632805?ixlib=rb-0.3.5&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=200&fit=max&s=aa3a807e1bbdfd4364d1f449eaa96d82"
-                                        alt="User Avatar"
-                                        aria-hidden="true"
-                                    />
+                                <button className="focus:outline-none">
+                                    <Avatar name={auth.user.name} />
                                 </button>
                             </Dropdown.Trigger>
                             <Dropdown.Content>
@@ -76,17 +79,14 @@ function Header() {
                                     href={route("profile.edit")}
                                     className="flex items-center"
                                 >
-                                    <IoPersonOutline
-                                        size={16}
-                                        className="mr-3"
-                                    />
+                                    <IoPersonOutline className="mr-3" />
                                     Profile
                                 </Dropdown.Link>
                                 <Dropdown.Link
                                     href="#"
                                     className="flex items-center"
                                 >
-                                    <IoCogOutline size={16} className="mr-3" />
+                                    <IoCogOutline className="mr-3" />
                                     Settings
                                 </Dropdown.Link>
                                 <Dropdown.Link
@@ -94,8 +94,9 @@ function Header() {
                                     method="post"
                                     as="button"
                                     className="text-red-600 flex items-center"
+                                    onClick={handleLogout}
                                 >
-                                    <IoLogOut size={16} className="mr-3" />
+                                    <IoLogOut className="mr-3" />
                                     Log Out
                                 </Dropdown.Link>
                             </Dropdown.Content>

@@ -1,59 +1,48 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { IoMdArrowDropdown } from "react-icons/io";
-import { Transition } from "@windmill/react-ui";
+import React, { useContext } from "react";
+import { Dialog, Transition } from "@headlessui/react";
+import { SidebarContext } from "../../Context/SidebarContext";
+import SidebarContent from "./SidebarContent";
 
-function SidebarSubmenu({ route }) {
-    const [isDropdownMenuOpen, setIsDropdownMenuOpen] = useState(false);
-
-    function handleDropdownMenuClick() {
-        setIsDropdownMenuOpen(!isDropdownMenuOpen);
-    }
+function MobileSidebar() {
+    const { isSidebarOpen, closeSidebar } = useContext(SidebarContext);
 
     return (
-        <li className="relative px-6 py-3" key={route.name}>
-            <button
-                className="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                onClick={handleDropdownMenuClick}
-                aria-haspopup="true"
+        <Transition show={isSidebarOpen} as={React.Fragment}>
+            <Dialog
+                as="div"
+                className="relative z-50 lg:hidden"
+                onClose={closeSidebar}
             >
-                <span className="inline-flex items-center">
-                    {/* <Icon
-                        className="w-5 h-5"
-                        aria-hidden="true"
-                        icon={route.icon}
-                    /> */}
-                    <span className="ml-4">{route.name}</span>
-                </span>
-                <IoMdArrowDropdown className="w-4 h-4" aria-hidden="true" />
-            </button>
-            <Transition
-                show={isDropdownMenuOpen}
-                enter="transition-all ease-in-out duration-300"
-                enterFrom="opacity-25 max-h-0"
-                enterTo="opacity-100 max-h-xl"
-                leave="transition-all ease-in-out duration-300"
-                leaveFrom="opacity-100 max-h-xl"
-                leaveTo="opacity-0 max-h-0"
-            >
-                <ul
-                    className="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50 dark:text-gray-400 dark:bg-gray-900"
-                    aria-label="submenu"
+                <Transition.Child
+                    as={React.Fragment}
+                    enter="transition-opacity ease-in-out duration-200"
+                    enterFrom="opacity-0"
+                    enterTo="opacity-100"
+                    leave="transition-opacity ease-in-out duration-200"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
                 >
-                    {route.routes.map((r) => (
-                        <li
-                            className="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                            key={r.name}
-                        >
-                            <Link className="w-full" to={r.path}>
-                                {r.name}
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-            </Transition>
-        </li>
+                    <div className="fixed inset-0 bg-black bg-opacity-50" />
+                </Transition.Child>
+
+                <div className="fixed inset-0 flex">
+                    <Transition.Child
+                        as={React.Fragment}
+                        enter="transition-transform ease-in-out duration-300"
+                        enterFrom="-translate-x-full"
+                        enterTo="translate-x-0"
+                        leave="transition-transform ease-in-out duration-300"
+                        leaveFrom="translate-x-0"
+                        leaveTo="-translate-x-full"
+                    >
+                        <Dialog.Panel className="relative w-64 bg-white dark:bg-gray-800 shadow-lg h-full flex flex-col">
+                            <SidebarContent />
+                        </Dialog.Panel>
+                    </Transition.Child>
+                </div>
+            </Dialog>
+        </Transition>
     );
 }
 
-export default SidebarSubmenu;
+export default MobileSidebar;
