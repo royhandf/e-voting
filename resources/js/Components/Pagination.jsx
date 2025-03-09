@@ -1,4 +1,5 @@
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import Button from "./Button";
 
 const Pagination = ({
     page,
@@ -21,7 +22,7 @@ const Pagination = ({
             <nav className="flex justify-center items-center">
                 <ul className="flex items-center space-x-0">
                     <li>
-                        <button
+                        <Button
                             onClick={() => setPage(page - 1)}
                             disabled={page === 1}
                             className="flex items-center justify-center w-[1.85rem] h-[1.85rem] 
@@ -31,11 +32,11 @@ const Pagination = ({
                                 disabled:opacity-50 disabled:pointer-events-none"
                         >
                             <FaChevronLeft size={13} />
-                        </button>
+                        </Button>
                     </li>
                     {Array.from({ length: totalPages }, (_, i) => (
                         <li key={i}>
-                            <button
+                            <Button
                                 onClick={() => setPage(i + 1)}
                                 className={`flex items-center justify-center w-[1.85rem] h-[1.85rem] 
                                     rounded-md text-sm font-medium transition-all 
@@ -46,11 +47,11 @@ const Pagination = ({
                                     }`}
                             >
                                 {i + 1}
-                            </button>
+                            </Button>
                         </li>
                     ))}
                     <li>
-                        <button
+                        <Button
                             onClick={() => setPage(page + 1)}
                             disabled={page === totalPages}
                             className="flex items-center justify-center w-[1.85rem] h-[1.85rem] 
@@ -60,7 +61,7 @@ const Pagination = ({
                                 disabled:opacity-50 disabled:pointer-events-none"
                         >
                             <FaChevronRight size={13} />
-                        </button>
+                        </Button>
                     </li>
                 </ul>
             </nav>

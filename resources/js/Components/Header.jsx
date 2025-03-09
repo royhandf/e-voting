@@ -12,6 +12,7 @@ import Dropdown from "./Dropdown";
 import Avatar from "./Avatar";
 import { usePage, router } from "@inertiajs/react";
 import Swal from "sweetalert2";
+import Button from "./Button";
 
 function Header() {
     const { theme, toggleTheme } = useContext(ThemeContext);
@@ -42,18 +43,18 @@ function Header() {
         <header className="z-40 py-4 bg-white shadow-sm dark:bg-gray-800">
             <div className="container flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300">
                 {/* Menu Button for Mobile */}
-                <button
+                <Button
                     className="p-2 rounded-md lg:hidden focus:outline-none focus:ring"
                     onClick={toggleSidebar}
                     aria-label="Menu"
                 >
                     <IoMenu className="w-6 h-6" />
-                </button>
+                </Button>
 
                 {/* Theme Toggler */}
                 <ul className="flex items-center space-x-6 ml-auto">
                     <li>
-                        <button
+                        <Button
                             className="rounded-md focus:outline-none focus:ring"
                             onClick={toggleTheme}
                             aria-label="Toggle color mode"
@@ -63,16 +64,16 @@ function Header() {
                             ) : (
                                 <FaMoon className="w-5 h-5" />
                             )}
-                        </button>
+                        </Button>
                     </li>
 
                     {/* Profile Dropdown */}
                     <li className="relative">
                         <Dropdown>
                             <Dropdown.Trigger>
-                                <button className="focus:outline-none">
+                                <Button className="focus:outline-none">
                                     <Avatar name={auth.user.name} />
-                                </button>
+                                </Button>
                             </Dropdown.Trigger>
                             <Dropdown.Content>
                                 <Dropdown.Link className="flex items-center">
