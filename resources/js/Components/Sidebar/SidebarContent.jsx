@@ -3,8 +3,8 @@ import { Link, usePage } from "@inertiajs/react";
 import {
     IoHomeOutline,
     IoPeopleOutline,
-    IoPersonAddOutline,
-    IoSettingsOutline,
+    IoPersonOutline,
+    IoCheckboxOutline,
     IoDocumentTextOutline,
 } from "react-icons/io5";
 
@@ -12,32 +12,32 @@ export const adminRoutes = [
     { name: "Dashboard", path: "/dashboard", icon: IoHomeOutline },
     {
         name: "Kelola Pengguna",
-        path: "/dashboard/users",
+        path: "/users",
         icon: IoPeopleOutline,
     },
     {
         name: "Kelola Kandidat",
-        path: "/dashboard/candidates",
-        icon: IoPersonAddOutline,
+        path: "/candidates",
+        icon: IoPersonOutline,
     },
     {
         name: "Kelola Pemilihan",
-        path: "/dashboard/votes",
-        icon: IoSettingsOutline,
+        path: "/votes",
+        icon: IoCheckboxOutline,
     },
     {
         name: "Laporan dan Hasil",
-        path: "/dashboard/reports",
+        path: "/reports",
         icon: IoDocumentTextOutline,
     },
 ];
 
 const userRoutes = [
     { name: "Dashboard", path: "/dashboard", icon: IoHomeOutline },
-    { name: "Pemilihan", path: "/dashboard/voting", icon: IoSettingsOutline },
+    { name: "Pemilihan", path: "/voting", icon: IoCheckboxOutline },
     {
         name: "Hasil Pemilihan",
-        path: "/dashboard/vote-result",
+        path: "/vote-result",
         icon: IoDocumentTextOutline,
     },
 ];

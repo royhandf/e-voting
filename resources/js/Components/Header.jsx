@@ -75,10 +75,7 @@ function Header() {
                                 </button>
                             </Dropdown.Trigger>
                             <Dropdown.Content>
-                                <Dropdown.Link
-                                    href={route("profile.edit")}
-                                    className="flex items-center"
-                                >
+                                <Dropdown.Link className="flex items-center">
                                     <IoPersonOutline className="mr-3" />
                                     Profile
                                 </Dropdown.Link>

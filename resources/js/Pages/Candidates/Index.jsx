@@ -1,0 +1,136 @@
+import { Head, Link, usePage } from "@inertiajs/react";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import Pagination from "@/Components/Pagination";
+import { IoTrash, IoSearch, IoEye, IoAdd } from "react-icons/io5";
+import { HiOutlinePencilAlt } from "react-icons/hi";
+import { useState, useEffect } from "react";
+
+export default function Candidates() {
+    const { candidates } = usePage().props;
+    const [searchTerm, setSearchTerm] = useState("");
+    const [filteredCandidates, setFilteredCandidates] = useState(
+        candidates.data
+    );
+
+    useEffect(() => {
+        const delaySearch = setTimeout(() => {
+            const filtered = candidates.data.filter((candidate) =>
+                candidate.name.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+            setFilteredCandidates(filtered);
+        }, 300);
+
+        return () => clearTimeout(delaySearch);
+    }, [searchTerm, candidates.data]);
+
+    return (
+        <AuthenticatedLayout>
+            <Head title="Daftar Kandidat" />
+            <h1 className="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+                Daftar Kandidat
+            </h1>
+
+            <div className="flex justify-between items-center mb-4">
+                <div className="relative sm:w-1/3 w-2/3">
+                    <IoSearch className="absolute left-3 top-3 text-gray-400" />
+                    <input
+                        type="text"
+                        placeholder="Cari kandidat..."
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+                <Link
+                    href={route("candidates.create")}
+                    className="px-2 sm:px-4 py-2 text-sm font-medium text-white bg-purple-700 rounded-md hover:bg-purple-600 transition flex items-center justify-center"
+                >
+                    <span className="hidden sm:block">Tambah Kandidat</span>
+                    <IoAdd size={20} className="sm:hidden" />
+                </Link>
+            </div>
+
+            <div className="overflow-x-auto bg-white shadow-md rounded-lg p-4 dark:bg-gray-800">
+                <table className="w-full table-auto border-collapse">
+                    <thead>
+                        <tr className="bg-gray-100 dark:bg-gray-700 text-left">
+                            <th className="px-4 py-2">No Urut</th>
+                            <th className="px-4 py-2">Nama Kandidat</th>
+                            <th className="px-4 py-2">Pemilihan</th>
+                            <th className="px-4 py-2">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredCandidates.length > 0 ? (
+                            filteredCandidates.map((candidate, index) => (
+                                <tr key={candidate.id} className="border-b">
+                                    <td className="px-4 py-2">{index + 1}</td>
+                                    <td className="px-4 py-2">
+                                        {candidate.name}
+                                    </td>
+                                    <td className="px-4 py-2">
+                                        {candidate.election
+                                            ? candidate.election.title
+                                            : "-"}
+                                    </td>
+                                    <td className="flex items-center space-x-2 p-2">
+                                        <Link
+                                            href={route(
+                                                "candidates.show",
+                                                candidate.id
+                                            )}
+                                            className="flex items-center justify-center w-7 h-7 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition"
+                                        >
+                                            <IoEye size={16} />
+                                        </Link>
+
+                                        <Link
+                                            href={route(
+                                                "candidates.edit",
+                                                candidate.id
+                                            )}
+                                            className="flex items-center justify-center w-7 h-7 text-white bg-yellow-500 rounded-md hover:bg-yellow-600 transition"
+                                        >
+                                            <HiOutlinePencilAlt size={16} />
+                                        </Link>
+
+                                        <Link
+                                            href={route(
+                                                "candidates.destroy",
+                                                candidate.id
+                                            )}
+                                            method="delete"
+                                            as="button"
+                                            className="flex items-center justify-center w-7 h-7 text-white bg-red-500 rounded-md hover:bg-red-600 transition"
+                                        >
+                                            <IoTrash size={16} />
+                                        </Link>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td
+                                    colSpan="4"
+                                    className="px-4 py-2 text-center text-gray-500"
+                                >
+                                    Tidak ada kandidat tersedia.
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+
+            <Pagination
+                page={candidates.current_page}
+                resultsPerPage={candidates.per_page}
+                totalResults={candidates.total}
+                totalPages={candidates.last_page}
+                setPage={(pageNumber) =>
+                    (window.location.href = `${candidates.path}?page=${pageNumber}`)
+                }
+            />
+        </AuthenticatedLayout>
+    );
+}
