@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CandidateController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ElectionController;
 use Illuminate\Foundation\Application;
@@ -23,6 +24,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::resource('candidates', CandidateController::class);
+    Route::resource('users', UserController::class);
     Route::resource('elections', ElectionController::class);
 });
 
