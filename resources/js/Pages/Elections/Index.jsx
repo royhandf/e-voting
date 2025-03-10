@@ -154,11 +154,6 @@ export default function Index() {
                                         <div className="flex items-center space-x-2">
                                             <Button
                                                 onClick={() => {
-                                                    console.log(
-                                                        "Selected Election:",
-                                                        election
-                                                    );
-
                                                     setSelectedElection(
                                                         election
                                                     );

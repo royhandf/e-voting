@@ -3,7 +3,7 @@ import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import SelectInput from "@/Components/SelectInput";
 import TextInput from "@/Components/TextInput";
-import TrixEditor from "@/Components/TrixEditor";
+import QuillEditor from "@/Components/QuillEditor";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, useForm } from "@inertiajs/react";
 
@@ -46,11 +46,10 @@ export default function Create() {
 
                     <div>
                         <InputLabel htmlFor="description" value="Deskripsi" />
-                        <TrixEditor
+                        <QuillEditor
                             value={data.description}
-                            onChange={(content) =>
-                                setData("description", content)
-                            }
+                            onChange={(value) => setData("description", value)}
+                            className="mt-1 block w-full"
                         />
 
                         <InputError
