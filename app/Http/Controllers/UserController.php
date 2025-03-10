@@ -6,15 +6,15 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class UsersController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index(Request $request)
     {
-        $users = User::with('election')
-            ->orderBy('created_at', 'desc')
+        $users = User::
+             orderBy('created_at', 'desc')
             ->paginate(10)
             ->appends($request->query());
 
