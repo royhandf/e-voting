@@ -22,7 +22,7 @@ export const adminRoutes = [
     },
     {
         name: "Kelola Pemilihan",
-        path: "/votes",
+        path: "/elections",
         icon: IoCheckboxOutline,
     },
     {
