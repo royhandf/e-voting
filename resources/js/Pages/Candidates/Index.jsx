@@ -4,13 +4,34 @@ import Pagination from "@/Components/Pagination";
 import { IoTrash, IoSearch, IoEye, IoAdd } from "react-icons/io5";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
+import Modal from "@/Components/Modal";
+import Button from "@/Components/Button";
 
 export default function Candidates() {
-    const { candidates } = usePage().props;
+    const { candidates, flash } = usePage().props;
+    const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredCandidates, setFilteredCandidates] = useState(
         candidates.data
     );
+    const [selectedCandidate, setSelectedCandidate] = useState(null);
+
+    useEffect(() => {
+        if (flash?.success) {
+            const isDarkMode =
+                document.documentElement.classList.contains("dark");
+
+            Swal.fire({
+                title: "Berhasil!",
+                text: flash.success,
+                icon: "success",
+                confirmButtonText: "OK",
+                background: isDarkMode ? "#1a202c" : "#fff",
+                color: isDarkMode ? "#fff" : "#000",
+            });
+        }
+    }, [flash]);
 
     useEffect(() => {
         const delaySearch = setTimeout(() => {
@@ -43,6 +64,7 @@ export default function Candidates() {
                 </div>
                 <Link
                     href={route("candidates.create")}
+                    as="button"
                     className="px-2 sm:px-4 py-2 text-sm font-medium text-white bg-purple-700 rounded-md hover:bg-purple-600 transition flex items-center justify-center"
                 >
                     <span className="hidden sm:block">Tambah Kandidat</span>
@@ -54,9 +76,10 @@ export default function Candidates() {
                 <table className="w-full table-auto border-collapse">
                     <thead>
                         <tr className="bg-gray-100 dark:bg-gray-700 text-left">
-                            <th className="px-4 py-2">No Urut</th>
+                            <th className="px-4 py-2">No.</th>
                             <th className="px-4 py-2">Nama Kandidat</th>
                             <th className="px-4 py-2">Pemilihan</th>
+                            <th className="px-4 py-2">Nomor Urut</th>
                             <th className="px-4 py-2">Aksi</th>
                         </tr>
                     </thead>
@@ -73,16 +96,19 @@ export default function Candidates() {
                                             ? candidate.election.title
                                             : "-"}
                                     </td>
+                                    <td className="px-4 py-2">
+                                        {candidate.number}
+                                    </td>
                                     <td className="flex items-center space-x-2 p-2">
-                                        <Link
-                                            href={route(
-                                                "candidates.show",
-                                                candidate.id
-                                            )}
+                                        <Button
+                                            onClick={() => {
+                                                setSelectedCandidate(candidate);
+                                                setIsOpen(true);
+                                            }}
                                             className="flex items-center justify-center w-7 h-7 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition"
                                         >
                                             <IoEye size={16} />
-                                        </Link>
+                                        </Button>
 
                                         <Link
                                             href={route(
@@ -111,7 +137,7 @@ export default function Candidates() {
                         ) : (
                             <tr>
                                 <td
-                                    colSpan="4"
+                                    colSpan="5"
                                     className="px-4 py-2 text-center text-gray-500"
                                 >
                                     Tidak ada kandidat tersedia.
@@ -131,6 +157,57 @@ export default function Candidates() {
                     (window.location.href = `${candidates.path}?page=${pageNumber}`)
                 }
             />
+
+            <Modal
+                title="Detail Kandidat"
+                isOpen={isOpen}
+                onClose={() => setIsOpen(false)}
+                size="xl"
+            >
+                {selectedCandidate && (
+                    <>
+                        <div className="flex flex-col items-center mb-4">
+                            <img
+                                src={selectedCandidate.photo_url}
+                                alt={selectedCandidate.name}
+                                className="w-60 h-60 rounded-full object-cover border"
+                            />
+                            <h2 className="text-lg font-bold mt-2">
+                                {selectedCandidate.name}
+                            </h2>
+                            <span className="text-sm text-gray-500 dark:text-gray-400">
+                                {selectedCandidate.election?.title ||
+                                    "Tanpa Pemilihan"}
+                            </span>
+                            <span className="text-xs text-gray-500 dark:text-gray-400">
+                                Nomor Urut -{" "}
+                                {selectedCandidate.number || "Belum Ditentukan"}
+                            </span>
+                        </div>
+
+                        <div className="mt-4">
+                            <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-200">
+                                Visi:
+                            </h3>
+                            <p className="text-sm text-gray-700 dark:text-gray-300">
+                                {selectedCandidate.vision}
+                            </p>
+                        </div>
+
+                        <div className="mt-4">
+                            <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-200">
+                                Misi:
+                            </h3>
+                            <div
+                                className="prose prose-sm text-gray-700 dark:text-gray-300"
+                                dangerouslySetInnerHTML={{
+                                    __html: selectedCandidate.mission,
+                                }}
+                            />
+                        </div>
+                    </>
+                )}
+            </Modal>
         </AuthenticatedLayout>
     );
 }

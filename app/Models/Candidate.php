@@ -14,7 +14,9 @@ class Candidate extends Model
         'election_id',
         'name',
         'photo',
-        'description',
+        'vision',
+        'mission',
+        'number'
     ];
 
     public function election()
@@ -25,5 +27,10 @@ class Candidate extends Model
     public function votes()
     {
         return $this->hasMany(Vote::class);
+    }
+
+    public function getPhotoUrlAttribute()
+    {
+        return $this->photo ? asset("storage/{$this->photo}") : null;
     }
 }

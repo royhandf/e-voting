@@ -1,10 +1,9 @@
 import InfoCard from "@/Components/Cards/InfoCard";
 import RoundIcon from "@/Components/RoundIcon";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
-import { IoIosPeople } from "react-icons/io";
-import { FaMoneyBillWaveAlt, FaShoppingCart } from "react-icons/fa";
-import { IoChatboxEllipses } from "react-icons/io5";
+import { Head, usePage } from "@inertiajs/react";
+import { IoTimeOutline } from "react-icons/io5";
+import { FaUserTie, FaCheckCircle, FaUserFriends } from "react-icons/fa";
 import response from "../Utils/tableData";
 import { useEffect, useState } from "react";
 import Pagination from "@/Components/Pagination";
@@ -12,6 +11,7 @@ import Pagination from "@/Components/Pagination";
 export default function Dashboard() {
     const [page, setPage] = useState(1);
     const [data, setData] = useState([]);
+    const { auth } = usePage().props;
 
     // paginate setup
     const resultsPerPage = 5;
@@ -28,42 +28,42 @@ export default function Dashboard() {
         <AuthenticatedLayout>
             <Head title="Dashboard" />
             <h1 className="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-                Dashboard
+                Welcome, {auth.user.name}!
             </h1>
 
             <div className="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-4">
-                <InfoCard title="Total clients" value="6389">
+                <InfoCard title="Total Pemilih" value="6389">
                     <RoundIcon
-                        icon={IoIosPeople}
-                        iconColorClass="text-orange-500 dark:text-orange-100"
-                        bgColorClass="bg-orange-100 dark:bg-orange-500"
-                        className="mr-4"
-                    />
-                </InfoCard>
-
-                <InfoCard title="Account balance" value="$ 46,760.89">
-                    <RoundIcon
-                        icon={FaMoneyBillWaveAlt}
-                        iconColorClass="text-green-500 dark:text-green-100"
-                        bgColorClass="bg-green-100 dark:bg-green-500"
-                        className="mr-4"
-                    />
-                </InfoCard>
-
-                <InfoCard title="New sales" value="376">
-                    <RoundIcon
-                        icon={FaShoppingCart}
+                        icon={FaUserFriends}
                         iconColorClass="text-blue-500 dark:text-blue-100"
                         bgColorClass="bg-blue-100 dark:bg-blue-500"
                         className="mr-4"
                     />
                 </InfoCard>
 
-                <InfoCard title="Pending contacts" value="35">
+                <InfoCard title="Total Kandidat" value="4">
                     <RoundIcon
-                        icon={IoChatboxEllipses}
-                        iconColorClass="text-teal-500 dark:text-teal-100"
-                        bgColorClass="bg-teal-100 dark:bg-teal-500"
+                        icon={FaUserTie}
+                        iconColorClass="text-purple-500 dark:text-purple-100"
+                        bgColorClass="bg-purple-100 dark:bg-purple-500"
+                        className="mr-4"
+                    />
+                </InfoCard>
+
+                <InfoCard title="Sudah Memilih" value="376">
+                    <RoundIcon
+                        icon={FaCheckCircle}
+                        iconColorClass="text-green-500 dark:text-green-100"
+                        bgColorClass="bg-green-100 dark:bg-green-500"
+                        className="mr-4"
+                    />
+                </InfoCard>
+
+                <InfoCard title="Belum Memilih" value="35">
+                    <RoundIcon
+                        icon={IoTimeOutline}
+                        iconColorClass="text-red-500 dark:text-red-100"
+                        bgColorClass="bg-red-100 dark:bg-red-500"
                         className="mr-4"
                     />
                 </InfoCard>
