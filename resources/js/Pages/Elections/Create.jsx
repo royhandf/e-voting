@@ -49,7 +49,6 @@ export default function Create() {
                         <QuillEditor
                             value={data.description}
                             onChange={(value) => setData("description", value)}
-                            className="mt-1 block w-full"
                         />
 
                         <InputError
