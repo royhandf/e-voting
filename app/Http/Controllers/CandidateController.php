@@ -61,7 +61,7 @@ class CandidateController extends Controller
             'vision' => 'required|string',
             'mission' => 'required|string',
             'election_id' => 'required|exists:elections,id',
-            'number' => 'required|integer|unique:candidates,number',
+            'number' => 'required|integer|unique:candidates,number,NULL,id,election_id,' . $request->election_id,
         ]);
 
         if ($request->hasFile('photo_url')) {
@@ -137,7 +137,9 @@ class CandidateController extends Controller
     public function destroy(Candidate $candidate)
     {
         if ($candidate->photo_url) {
-            Storage::disk('public')->delete($candidate->photo_url);
+            $relativePath = str_replace('storage/', '', $candidate->photo_url);
+
+            Storage::disk('public')->delete($relativePath);
         }
 
         $candidate->delete();

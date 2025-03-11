@@ -1,4 +1,4 @@
-import { Head, Link, usePage } from "@inertiajs/react";
+import { Head, Link, usePage, router } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Pagination from "@/Components/Pagination";
 import { IoTrash, IoSearch, IoEye, IoAdd } from "react-icons/io5";
@@ -58,26 +58,27 @@ export default function Index() {
             color: isDarkMode ? "#fff" : "#000",
         }).then((result) => {
             if (result.isConfirmed) {
-                axios
-                    .delete(route("elections.destroy", id))
-                    .then(() => {
+                router.delete(route("elections.destroy", id), {
+                    preserveScroll: true,
+                    onSuccess: () => {
                         Swal.fire(
                             "Berhasil!",
                             "Pemilihan berhasil dihapus.",
                             "success"
                         );
-                        window.location.reload();
-                    })
-                    .catch((error) => {
+                    },
+                    onError: () => {
                         Swal.fire(
                             "Gagal!",
                             "Terjadi kesalahan saat menghapus pemilihan.",
                             "error"
                         );
-                    });
+                    },
+                });
             }
         });
     };
+
     return (
         <AuthenticatedLayout>
             <Head title="Daftar Pemilihan" />
