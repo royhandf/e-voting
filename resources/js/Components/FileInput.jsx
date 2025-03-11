@@ -22,8 +22,6 @@ export default function FileInput({ setData, initialPreview = null }) {
             setFileName("No file chosen");
             setPreview(initialPreview);
         }
-
-        console.log(file);
     };
 
     return (

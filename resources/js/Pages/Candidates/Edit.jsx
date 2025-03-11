@@ -21,7 +21,6 @@ export default function Edit({ candidate, elections }) {
 
     const submit = (e) => {
         e.preventDefault();
-        console.log(data);
         post(route("candidates.update", candidate.id), {
             forceFormData: true,
         });
@@ -146,10 +145,9 @@ export default function Edit({ candidate, elections }) {
                         <Button
                             type="submit"
                             className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition"
-                            // disabled={processing}
+                            disabled={processing}
                         >
-                            {/* {processing ? "Menyimpan..." : "Simpan Perubahan"} */}
-                            Simpan Perubahan
+                            {processing ? "Menyimpan..." : "Simpan Perubahan"}
                         </Button>
                     </div>
                 </form>
