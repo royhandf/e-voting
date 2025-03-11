@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Candidate;
 use App\Models\Election;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class CandidateController extends Controller
@@ -56,29 +57,26 @@ class CandidateController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'photo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'photo_url' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             'vision' => 'required|string',
             'mission' => 'required|string',
             'election_id' => 'required|exists:elections,id',
+            'number' => 'required|integer|unique:candidates,number',
         ]);
 
-        $lastNumber = Candidate::where('election_id', $request->election_id)->max('number');
-
-        $newNumber = $lastNumber ? $lastNumber + 1 : 1;
-
-        if ($request->hasFile('photo')) {
-            $photoPath = $request->file('photo')->store('candidates', 'public');
+        if ($request->hasFile('photo_url')) {
+            $photoPath = $request->file('photo_url')->store('candidates', 'public');
         } else {
             $photoPath = null;
         }
 
         Candidate::create([
             'name' => $request->name,
-            'photo' => $photoPath,
+            'photo_url' => $photoPath,
             'vision' => $request->vision,
             'mission' => $request->mission,
             'election_id' => $request->election_id,
-            'number' => $newNumber
+            'number' => $request->number
         ]);
 
         return redirect()->route('candidates.index')->with('success', 'Kandidat berhasil ditambahkan.');
@@ -108,16 +106,42 @@ class CandidateController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Candidate $candidate)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'vision' =>  'required|string',
+            'mission' => 'required|string',
+            'election_id' =>  'required|exists:elections,id',
+            'number' => 'required|integer|unique:candidates,number,' . $candidate->id . ',id,election_id,' . $request->election_id
+        ]);
+
+        $candidate->update($validated);
+        if ($request->hasFile('photo_url')) {
+            if ($candidate->photo_url) {
+                $relativePath = str_replace(url('storage') . '/', '', $candidate->photo_url);
+                Storage::disk('public')->delete($relativePath);
+            }
+
+            $photoPath = $request->file('photo_url')->store('candidates', 'public');
+            $candidate->update(['photo_url' => $photoPath]);
+        }
+
+        return redirect()->route('candidates.index')->with('success', 'Kandidat berhasil diperbarui.');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Candidate $candidate)
     {
-        //
+        if ($candidate->photo_url) {
+            Storage::disk('public')->delete($candidate->photo_url);
+        }
+
+        $candidate->delete();
+
+        return redirect()->route('candidates.index')->with('success', 'Kandidat berhasil dihapus.');
     }
 }

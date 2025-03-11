@@ -5,33 +5,22 @@ import SelectInput from "@/Components/SelectInput";
 import TextInput from "@/Components/TextInput";
 import QuillEditor from "@/Components/QuillEditor";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, useForm } from "@inertiajs/react";
+import { Head, Link, useForm } from "@inertiajs/react";
 import FileInput from "@/Components/FileInput";
 
 export default function Create({ elections }) {
     const { data, setData, post, processing, errors } = useForm({
         name: "",
-        photo: null,
+        photo_url: null,
         vision: "",
         mission: "",
         election_id: elections.length > 0 ? elections[0].id : "",
+        number: "",
     });
 
     const submit = (e) => {
         e.preventDefault();
         post(route("candidates.store"));
-    };
-
-    const handleValidation = (field, value) => {
-        setData(field, value);
-
-        setErrorsLocal((prev) => ({
-            ...prev,
-            [field]:
-                !value || value.trim() === "<div><br></div>"
-                    ? "Field ini wajib diisi"
-                    : "",
-        }));
     };
 
     return (
@@ -41,30 +30,58 @@ export default function Create({ elections }) {
                 Tambah Kandidat
             </h1>
 
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
                 <form onSubmit={submit} className="space-y-4">
-                    <div>
-                        <InputLabel htmlFor="name" value="Nama Kandidat" />
-                        <TextInput
-                            id="name"
-                            type="text"
-                            name="name"
-                            value={data.name}
-                            className="mt-1 block w-full"
-                            onChange={(e) => setData("name", e.target.value)}
-                            required
-                        />
-                        <InputError message={errors.name} className="mt-2" />
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-5">
+                        <div className="w-full sm:w-4/5">
+                            <InputLabel htmlFor="name" value="Nama Kandidat" />
+                            <TextInput
+                                id="name"
+                                type="text"
+                                name="name"
+                                value={data.name}
+                                className="mt-1 block w-full"
+                                onChange={(e) =>
+                                    setData("name", e.target.value)
+                                }
+                                required
+                            />
+                            <InputError
+                                message={errors.name}
+                                className="mt-2"
+                            />
+                        </div>
+                        <div className="w-full sm:w-1/5">
+                            <InputLabel htmlFor="number" value="Nomor Urut" />
+                            <TextInput
+                                id="number"
+                                type="number"
+                                name="number"
+                                value={data.number}
+                                className="mt-1 block w-full"
+                                onChange={(e) =>
+                                    setData("number", e.target.value)
+                                }
+                                required
+                            />
+                            <InputError
+                                message={errors.number}
+                                className="mt-2"
+                            />
+                        </div>
                     </div>
 
                     <div>
-                        <InputLabel htmlFor="photo" value="Foto Kandidat" />
+                        <InputLabel htmlFor="photo_url" value="Foto Kandidat" />
                         <FileInput setData={setData} />
                         <p className="text-sm text-gray-500 mt-1">
                             * Gunakan foto portrait (3:4)
                         </p>
 
-                        <InputError message={errors.photo} className="mt-2" />
+                        <InputError
+                            message={errors.photo_url}
+                            className="mt-2"
+                        />
                     </div>
 
                     <div>
@@ -72,7 +89,6 @@ export default function Create({ elections }) {
                         <QuillEditor
                             value={data.vision}
                             onChange={(content) => setData("vision", content)}
-                            className="mt-1 block w-full"
                         />
                         <InputError message={errors.vision} className="mt-2" />
                     </div>
@@ -82,7 +98,6 @@ export default function Create({ elections }) {
                         <QuillEditor
                             value={data.mission}
                             onChange={(content) => setData("mission", content)}
-                            className="mt-1 block w-full"
                         />
                         <InputError message={errors.mission} className="mt-2" />
                     </div>
@@ -106,7 +121,14 @@ export default function Create({ elections }) {
                         />
                     </div>
 
-                    <div className="flex justify-end pt-2">
+                    <div className="flex justify-end pt-2 space-x-4">
+                        <Link
+                            as="button"
+                            className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition"
+                            href={route("candidates.index")}
+                        >
+                            Batal
+                        </Link>
                         <Button
                             type="submit"
                             className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition"

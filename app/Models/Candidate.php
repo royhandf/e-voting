@@ -13,11 +13,13 @@ class Candidate extends Model
     protected $fillable = [
         'election_id',
         'name',
-        'photo',
+        'photo_url',
         'vision',
         'mission',
         'number'
     ];
+
+    protected $appends = ['photo_url'];
 
     public function election()
     {
@@ -31,6 +33,8 @@ class Candidate extends Model
 
     public function getPhotoUrlAttribute()
     {
-        return $this->photo ? asset("storage/{$this->photo}") : null;
+        return $this->attributes['photo_url']
+            ? asset("storage/{$this->attributes['photo_url']}")
+            : null;
     }
 }

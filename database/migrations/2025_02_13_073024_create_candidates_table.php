@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignUuid('election_id')->constrained()->onDelete('cascade');
             $table->string('name');
             $table->integer('number');
-            $table->string('photo')->nullable();
+            $table->string('photo_url')->nullable();
             $table->text('vision')->nullable();
             $table->text('mission')->nullable();
             $table->timestamps();

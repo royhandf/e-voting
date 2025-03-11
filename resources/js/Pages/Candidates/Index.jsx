@@ -44,6 +44,42 @@ export default function Candidates() {
         return () => clearTimeout(delaySearch);
     }, [searchTerm, candidates.data]);
 
+    const handleDelete = (id) => {
+        const isDarkMode = document.documentElement.classList.contains("dark");
+
+        Swal.fire({
+            title: "Apakah Anda yakin?",
+            text: "Kandidat yang dihapus tidak dapat dikembalikan.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Ya, hapus",
+            cancelButtonText: "Batal",
+            confirmButtonColor: "#dc2626",
+            cancelButtonColor: "#4f46e5",
+            background: isDarkMode ? "#1a202c" : "#fff",
+            color: isDarkMode ? "#fff" : "#000",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios
+                    .delete(route("candidates.destroy", id))
+                    .then(() => {
+                        Swal.fire(
+                            "Berhasil!",
+                            "Kandidat berhasil dihapus.",
+                            "success"
+                        );
+                        window.location.reload();
+                    })
+                    .catch((error) => {
+                        Swal.fire(
+                            "Gagal!",
+                            "Terjadi kesalahan saat menghapus kandidat.",
+                            "error"
+                        );
+                    });
+            }
+        });
+    };
     return (
         <AuthenticatedLayout>
             <Head title="Daftar Kandidat" />
@@ -115,22 +151,20 @@ export default function Candidates() {
                                                 "candidates.edit",
                                                 candidate.id
                                             )}
+                                            as="button"
                                             className="flex items-center justify-center w-7 h-7 text-white bg-yellow-500 rounded-md hover:bg-yellow-600 transition"
                                         >
                                             <HiOutlinePencilAlt size={16} />
                                         </Link>
 
-                                        <Link
-                                            href={route(
-                                                "candidates.destroy",
-                                                candidate.id
-                                            )}
-                                            method="delete"
-                                            as="button"
+                                        <Button
+                                            onClick={() =>
+                                                handleDelete(candidate.id)
+                                            }
                                             className="flex items-center justify-center w-7 h-7 text-white bg-red-500 rounded-md hover:bg-red-600 transition"
                                         >
                                             <IoTrash size={16} />
-                                        </Link>
+                                        </Button>
                                     </td>
                                 </tr>
                             ))
@@ -165,7 +199,7 @@ export default function Candidates() {
                 size="xl"
             >
                 {selectedCandidate && (
-                    <>
+                    <div className="p-4">
                         <div className="flex flex-col items-center mb-4">
                             <img
                                 src={selectedCandidate.photo_url}
@@ -205,7 +239,7 @@ export default function Candidates() {
                                 }}
                             />
                         </div>
-                    </>
+                    </div>
                 )}
             </Modal>
         </AuthenticatedLayout>

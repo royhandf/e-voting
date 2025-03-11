@@ -1,23 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function FileInput({ setData }) {
+export default function FileInput({ setData, initialPreview = null }) {
     const [fileName, setFileName] = useState("No file chosen");
-    const [preview, setPreview] = useState(null);
+    const [preview, setPreview] = useState(initialPreview);
+
+    useEffect(() => {
+        setPreview(initialPreview);
+    }, [initialPreview]);
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
 
         if (file) {
             setFileName(file.name);
-            setData("photo", file);
+            setData("photo_url", file);
 
             const reader = new FileReader();
             reader.onloadend = () => setPreview(reader.result);
             reader.readAsDataURL(file);
         } else {
             setFileName("No file chosen");
-            setPreview(null);
+            setPreview(initialPreview);
         }
+
+        console.log(file);
     };
 
     return (
@@ -37,6 +43,7 @@ export default function FileInput({ setData }) {
                     Choose File
                     <input
                         type="file"
+                        name="photo_url"
                         accept="image/png, image/jpeg, image/jpg"
                         className="hidden"
                         onChange={handleFileChange}
