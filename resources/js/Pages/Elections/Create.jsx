@@ -111,10 +111,6 @@ export default function Create() {
                                 },
                                 { value: "active", label: "Active" },
                                 {
-                                    value: "canceled",
-                                    label: "Canceled",
-                                },
-                                {
                                     value: "closed",
                                     label: "Closed",
                                 },

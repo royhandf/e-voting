@@ -107,7 +107,6 @@ export default function Edit({ election }) {
                             options={[
                                 { value: "pending", label: "Pending" },
                                 { value: "active", label: "Active" },
-                                { value: "canceled", label: "Canceled" },
                                 { value: "closed", label: "Closed" },
                             ]}
                             value={data.status}

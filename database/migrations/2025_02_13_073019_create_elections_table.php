@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->dateTime('start_date');
             $table->dateTime('end_date');
-            $table->enum('status', ['pending', 'active', 'closed', 'canceled'])->default('pending');
+            $table->enum('status', ['pending', 'active', 'closed'])->default('pending');
             $table->timestamps();
         });
     }

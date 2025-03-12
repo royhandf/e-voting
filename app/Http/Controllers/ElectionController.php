@@ -52,7 +52,7 @@ class ElectionController extends Controller
             'description' => 'nullable|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
-            'status' => 'required|in:pending,active,canceled,closed',
+            'status' => 'required|in:pending,active,closed',
         ]);
 
         $validated['start_date'] = Carbon::parse($validated['start_date'])->format('Y-m-d H:i:s');
@@ -89,7 +89,7 @@ class ElectionController extends Controller
             'description' => 'nullable|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
-            'status' => 'required|in:pending,active,canceled,closed',
+            'status' => 'required|in:pending,active,closed',
         ]);
 
         $election->update([
