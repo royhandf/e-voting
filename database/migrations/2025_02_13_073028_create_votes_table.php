@@ -18,6 +18,8 @@ return new class extends Migration
             $table->foreignUuid('election_id')->constrained()->onDelete('cascade');
             $table->timestamp('vote_time')->useCurrent();
             $table->timestamps();
+
+            $table->unique(['user_id', 'election_id']);
         });
     }
 

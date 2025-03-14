@@ -4,6 +4,7 @@ use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ElectionController;
+use App\Http\Controllers\VoteController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -26,6 +27,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('candidates', CandidateController::class);
     Route::resource('users', UserController::class);
     Route::resource('elections', ElectionController::class);
+});
+
+Route::middleware(['auth', 'user'])->group(function () {
+    Route::resource('votes', VoteController::class);
 });
 
 require __DIR__ . '/auth.php';

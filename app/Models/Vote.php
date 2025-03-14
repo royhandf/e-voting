@@ -22,6 +22,13 @@ class Vote extends Model
         'vote_time' => 'datetime',
     ];
 
+    public static function hasUserVoted($userId, $electionId)
+    {
+        return self::where('user_id', $userId)
+            ->where('election_id', $electionId)
+            ->exists();
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

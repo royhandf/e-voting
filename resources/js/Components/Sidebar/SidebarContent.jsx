@@ -6,6 +6,7 @@ import {
     IoPersonOutline,
     IoCheckboxOutline,
     IoDocumentTextOutline,
+    IoTimeOutline,
 } from "react-icons/io5";
 
 export const adminRoutes = [
@@ -34,11 +35,11 @@ export const adminRoutes = [
 
 const userRoutes = [
     { name: "Dashboard", path: "/dashboard", icon: IoHomeOutline },
-    { name: "Pemilihan", path: "/voting", icon: IoCheckboxOutline },
+    { name: "Pemilihan", path: "/votes", icon: IoCheckboxOutline },
     {
-        name: "Hasil Pemilihan",
-        path: "/vote-result",
-        icon: IoDocumentTextOutline,
+        name: "Riwayat Pemilihan",
+        path: "/history",
+        icon: IoTimeOutline,
     },
 ];
 
