@@ -1,19 +1,16 @@
 import { Head, Link, usePage, router } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Pagination from "@/Components/Pagination";
-import { IoTrash, IoSearch, IoEye, IoAdd } from "react-icons/io5";
+import { IoTrash, IoSearch, IoAdd } from "react-icons/io5";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import { useState, useEffect } from "react";
 import Button from "@/Components/Button";
-import Modal from "@/Components/Modal";
 import Swal from "sweetalert2";
 
 export default function Index() {
     const { elections, flash } = usePage().props;
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredElections, setFilteredElections] = useState(elections.data);
-    const [isOpen, setIsOpen] = useState(false);
-    const [selectedElection, setSelectedElection] = useState(null);
 
     useEffect(() => {
         const delaySearch = setTimeout(() => {
@@ -153,17 +150,6 @@ export default function Index() {
                                     </td>
                                     <td className="px-4 py-2">
                                         <div className="flex items-center space-x-2">
-                                            <Button
-                                                onClick={() => {
-                                                    setSelectedElection(
-                                                        election
-                                                    );
-                                                    setIsOpen(true);
-                                                }}
-                                                className="flex items-center justify-center w-7 h-7 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition"
-                                            >
-                                                <IoEye size={16} />
-                                            </Button>
                                             <Link
                                                 href={route(
                                                     "elections.edit",
@@ -209,67 +195,6 @@ export default function Index() {
                     (window.location.href = `${elections.path}?page=${pageNumber}`)
                 }
             />
-            <Modal
-                title="Detail Pemilihan"
-                isOpen={isOpen}
-                onClose={() => setIsOpen(false)}
-                size="lg"
-            >
-                {selectedElection && (
-                    <>
-                        <div className="flex justify-between items-center mb-2">
-                            <h2 className="text-lg font-bold mb-1">
-                                {selectedElection.title}
-                            </h2>
-                            <span
-                                className={`px-2 py-1 rounded-md text-xs font-semibold
-                       ${
-                           selectedElection.status === "pending"
-                               ? "bg-orange-500 text-white"
-                               : selectedElection.status === "active"
-                               ? "bg-green-500 text-white"
-                               : selectedElection.status === "closed"
-                               ? "bg-gray-500 text-white"
-                               : "bg-red-500 text-white"
-                       }
-                     `}
-                            >
-                                {selectedElection.status}
-                            </span>
-                        </div>
-
-                        <div className="mb-4">
-                            {selectedElection.description ? (
-                                <div
-                                    className="text-sm text-gray-600 dark:text-gray-400"
-                                    dangerouslySetInnerHTML={{
-                                        __html: selectedElection.description,
-                                    }}
-                                />
-                            ) : (
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    Tidak ada deskripsi
-                                </p>
-                            )}
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-2 mb-4 text-sm">
-                            <div>
-                                <p className="font-medium text-gray-600 dark:text-gray-400">
-                                    Tanggal Mulai:
-                                </p>
-                                <p>{selectedElection.start_date}</p>
-                            </div>
-                            <div>
-                                <p className="font-medium text-gray-600 dark:text-gray-400">
-                                    Tanggal Selesai:
-                                </p>
-                                <p>{selectedElection.end_date}</p>
-                            </div>
-                        </div>
-                    </>
-                )}
-            </Modal>
         </AuthenticatedLayout>
     );
 }

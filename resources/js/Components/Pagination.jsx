@@ -9,7 +9,7 @@ const Pagination = ({
     setPage,
 }) => {
     return (
-        <div className="flex justify-between items-center mt-4">
+        <div className="flex justify-between items-center mt-4 mb-8">
             {/* Pagination Info */}
             <span className="text-sm text-gray-700 dark:text-gray-300 font-medium">
                 Showing{" "}

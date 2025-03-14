@@ -3,14 +3,12 @@ import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import SelectInput from "@/Components/SelectInput";
 import TextInput from "@/Components/TextInput";
-import QuillEditor from "@/Components/QuillEditor";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, useForm } from "@inertiajs/react";
 
 export default function Edit({ election }) {
     const { data, setData, put, processing, errors } = useForm({
         title: election.title,
-        description: election.description,
         start_date: election.start_date,
         end_date: election.end_date,
         status: election.status,
@@ -42,19 +40,6 @@ export default function Edit({ election }) {
                             required
                         />
                         <InputError message={errors.title} className="mt-2" />
-                    </div>
-
-                    <div>
-                        <InputLabel htmlFor="description" value="Deskripsi" />
-                        <QuillEditor
-                            value={data.description}
-                            onChange={(value) => setData("description", value)}
-                            className="mt-1 block w-full"
-                        />
-                        <InputError
-                            message={errors.description}
-                            className="mt-2"
-                        />
                     </div>
 
                     <div>

@@ -81,13 +81,6 @@ function Header() {
                                     Profile
                                 </Dropdown.Link>
                                 <Dropdown.Link
-                                    href="#"
-                                    className="flex items-center"
-                                >
-                                    <IoCogOutline className="mr-3" />
-                                    Settings
-                                </Dropdown.Link>
-                                <Dropdown.Link
                                     href={route("logout")}
                                     method="post"
                                     as="button"

@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('elections', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('title');
-            $table->text('description')->nullable();
             $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->enum('status', ['pending', 'active', 'closed'])->default('pending');

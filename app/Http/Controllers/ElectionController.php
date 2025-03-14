@@ -20,7 +20,6 @@ class ElectionController extends Controller
             return [
                 'id' => $election->id,
                 'title' => $election->title,
-                'description' => $election->description,
                 'start_date' => $election->start_date,
                 'end_date' => $election->end_date,
                 'status' => $election->status,
@@ -49,7 +48,6 @@ class ElectionController extends Controller
     {
         $validated = $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'status' => 'required|in:pending,active,closed',
@@ -86,7 +84,6 @@ class ElectionController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
             'status' => 'required|in:pending,active,closed',
@@ -94,7 +91,6 @@ class ElectionController extends Controller
 
         $election->update([
             'title' => $request->title,
-            'description' => $request->description,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
             'status' => $request->status,

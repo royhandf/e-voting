@@ -10,7 +10,6 @@ import { Head, useForm } from "@inertiajs/react";
 export default function Create() {
     const { data, setData, post, processing, errors } = useForm({
         title: "",
-        description: "",
         start_date: "",
         end_date: "",
         status: "pending",
@@ -42,19 +41,6 @@ export default function Create() {
                             required
                         />
                         <InputError message={errors.title} className="mt-2" />
-                    </div>
-
-                    <div>
-                        <InputLabel htmlFor="description" value="Deskripsi" />
-                        <QuillEditor
-                            value={data.description}
-                            onChange={(value) => setData("description", value)}
-                        />
-
-                        <InputError
-                            message={errors.description}
-                            className="mt-2"
-                        />
                     </div>
 
                     <div>
