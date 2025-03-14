@@ -30,7 +30,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
 });
 
 Route::middleware(['auth', 'user'])->group(function () {
-    Route::resource('votes', VoteController::class);
+    Route::get('/votes', [VoteController::class, 'index'])->name('votes.index');
+    Route::post('/vote', [VoteController::class, 'store'])->name('vote.store');
+    Route::get('/votes/history', [VoteController::class, 'history'])->name('votes.history');
 });
 
 require __DIR__ . '/auth.php';

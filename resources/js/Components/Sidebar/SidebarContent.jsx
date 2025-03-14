@@ -38,7 +38,7 @@ const userRoutes = [
     { name: "Pemilihan", path: "/votes", icon: IoCheckboxOutline },
     {
         name: "Riwayat Pemilihan",
-        path: "/history",
+        path: "/votes/history",
         icon: IoTimeOutline,
     },
 ];

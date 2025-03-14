@@ -30,7 +30,7 @@ export default function Index() {
         }
 
         router.post(
-            "/votes",
+            "/vote",
             {
                 candidate_id: selectedCandidates[electionId],
                 election_id: electionId,
