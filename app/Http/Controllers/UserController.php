@@ -28,7 +28,12 @@ class UserController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Users/Create');
+        $users = User::
+        orderBy('nim')->get();
+
+        return Inertia::render('Users/Create', [
+            'users' => $users
+        ]);
     }
 
     /**

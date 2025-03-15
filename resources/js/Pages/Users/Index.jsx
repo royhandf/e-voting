@@ -14,8 +14,8 @@ export default function Users() {
 
     useEffect(() => {
         const delaySearch = setTimeout(() => {
-            const filtered = users.data.filter((candidate) =>
-                candidate.name.toLowerCase().includes(searchTerm.toLowerCase())
+            const filtered = users.data.filter((user) =>
+                user.name.toLowerCase().includes(searchTerm.toLowerCase())
             );
             setFilteredUsers(filtered);
         }, 300);
@@ -27,7 +27,7 @@ export default function Users() {
         <AuthenticatedLayout>
             <Head title="Daftar Kandidat" />
             <h1 className="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-                Daftar Kandidat
+                Daftar Pengguna
             </h1>
 
             <div className="flex justify-between items-center mb-4">
@@ -45,7 +45,7 @@ export default function Users() {
                     href={route("users.create")}
                     className="px-2 sm:px-4 py-2 text-sm font-medium text-white bg-purple-700 rounded-md hover:bg-purple-600 transition flex items-center justify-center"
                 >
-                    <span className="hidden sm:block">Tambah Kandidat</span>
+                    <span className="hidden sm:block">Tambah Pengguna</span>
                     <IoAdd size={20} className="sm:hidden" />
                 </Link>
             </div>
@@ -54,30 +54,28 @@ export default function Users() {
                 <table className="w-full table-auto border-collapse">
                     <thead>
                         <tr className="bg-gray-100 dark:bg-gray-700 text-left">
-                            <th className="px-4 py-2">No Urut</th>
-                            <th className="px-4 py-2">Nama Kandidat</th>
-                            <th className="px-4 py-2">Pemilihan</th>
+                            <th className="px-4 py-2">No</th>
+                            <th className="px-4 py-2">NIM</th>
+                            <th className="px-4 py-2">Nama Pengguna</th>
                             <th className="px-4 py-2">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filteredUsers.length > 0 ? (
-                            filteredUsers.map((candidate, index) => (
-                                <tr key={candidate.id} className="border-b">
+                            filteredUsers.map((user, index) => (
+                                <tr key={user.id} className="border-b">
                                     <td className="px-4 py-2">{index + 1}</td>
                                     <td className="px-4 py-2">
-                                        {candidate.name}
+                                        {user.nim}
                                     </td>
                                     <td className="px-4 py-2">
-                                        {candidate.election
-                                            ? candidate.election.title
-                                            : "-"}
+                                    {user.name}
                                     </td>
                                     <td className="flex items-center space-x-2 p-2">
                                         <Link
                                             href={route(
                                                 "users.show",
-                                                candidate.id
+                                                user.id
                                             )}
                                             className="flex items-center justify-center w-7 h-7 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition"
                                         >
@@ -87,7 +85,7 @@ export default function Users() {
                                         <Link
                                             href={route(
                                                 "users.edit",
-                                                candidate.id
+                                                user.id
                                             )}
                                             className="flex items-center justify-center w-7 h-7 text-white bg-yellow-500 rounded-md hover:bg-yellow-600 transition"
                                         >
@@ -97,7 +95,7 @@ export default function Users() {
                                         <Link
                                             href={route(
                                                 "users.destroy",
-                                                candidate.id
+                                                user.id
                                             )}
                                             method="delete"
                                             as="button"
