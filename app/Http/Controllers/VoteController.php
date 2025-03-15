@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\VoteUpdated;
 use App\Models\Candidate;
 use App\Models\Election;
 use App\Models\Vote;
@@ -36,7 +37,6 @@ class VoteController extends Controller
             'candidate_id' => 'required|exists:candidates,id',
         ]);
 
-        // cek apakah user sudah pernah vote di election ini
         if (Vote::hasUserVoted($user->id, $request->election_id)) {
             return back()->withErrors(['message' => 'Anda sudah memberikan suara dalam pemilihan ini.']);
         }
@@ -47,8 +47,28 @@ class VoteController extends Controller
             'candidate_id' => $request->candidate_id,
         ]);
 
+        $candidates = Candidate::where('election_id', $request->election_id)->get();
+
+        $votes = Vote::selectRaw('candidate_id, COUNT(*) as count')
+            ->where('election_id', $request->election_id)
+            ->groupBy('candidate_id')
+            ->get();
+
+        $formattedVotes = $candidates->map(function ($candidate) use ($votes) {
+            $vote = $votes->firstWhere('candidate_id', $candidate->id);
+
+            return [
+                'candidate_name' => $candidate->name,
+                'election_id' => $candidate->election_id,
+                'votes' => $vote ? $vote->count : 0,
+            ];
+        });
+
+        broadcast(new VoteUpdated($formattedVotes));
+
         return redirect()->back()->with('success', 'Vote berhasil disimpan.');
     }
+
 
     public function history()
     {
