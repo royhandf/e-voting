@@ -26,7 +26,7 @@ export default function Modal({
                 className={`bg-white rounded-lg shadow-lg ${widthClass} max-h-[90vh] overflow-y-auto dark:bg-gray-800`}
             >
                 {/* Header Modal */}
-                <div className="flex justify-between items-center border-b pb-2 p-4 sticky top-0 bg-white dark:bg-gray-800">
+                <div className="flex justify-between items-center pb-2 p-4 sticky top-0 bg-white dark:bg-gray-800">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                         {title}
                     </h3>
