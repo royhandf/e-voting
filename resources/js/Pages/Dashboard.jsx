@@ -73,7 +73,7 @@ export default function Admin() {
                 <ChartVote voteResults={voteResults} elections={elections} />
             </div>
 
-            <div
+            {/* <div
                 className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-5 mb-10
             "
             >
@@ -115,7 +115,8 @@ export default function Admin() {
                         ))}
                     </tbody>
                 </table>
-            </div>
+            </div> */}
+            
         </AuthenticatedLayout>
     );
 }
