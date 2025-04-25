@@ -28,7 +28,7 @@ export const adminRoutes = [
     },
     {
         name: "Laporan dan Hasil",
-        path: "/reports",
+        path: "/results",
         icon: IoDocumentTextOutline,
     },
 ];

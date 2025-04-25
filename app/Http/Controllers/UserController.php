@@ -23,9 +23,7 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+    
     public function create()
     {
         $users = User::
@@ -41,7 +39,24 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'nim' => 'required|integer',
+                'password' => 'required|string',
+                'role' =>  'required|in:admin,user',
+                
+            ]);
+    
+            User::create([
+                'name' => $request->name,
+                'nim' => $request->nim,
+                'password' => $request->password,
+                'role' => $request->role,
+            ]);
+    
+            return redirect()->route('users.index')->with('success', 'user berhasil ditambahkan.');
+        }
     }
 
     /**
@@ -55,24 +70,44 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(User $user)
     {
-        //
+    return Inertia::render('Users/Edit', [
+        'user' => $user
+    ]);
     }
+
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+
+     public function update(Request $request, User $user)
+     {
+         $request->validate([
+             'name' => 'required|string|max:255',
+             'nim' => 'required|integer',
+             'password' => 'required|string',
+             'role' =>  'required|in:admin,user',
+         ]);
+     
+         $user->update([
+             'name' => $request->name,
+             'nim' => $request->nim,
+             'password' => bcrypt($request->password),
+             'role' => $request->role,
+         ]);
+     
+         return redirect()->route('users.index')->with('success', 'Data pengguna berhasil diperbarui.');
+     }
+     
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+        return redirect()->route('users.index')->with('success', 'Data pengguna berhasil dihapus.');
     }
 }

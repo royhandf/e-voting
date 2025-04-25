@@ -3,59 +3,48 @@ import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import SelectInput from "@/Components/SelectInput";
 import TextInput from "@/Components/TextInput";
-import QuillEditor from "@/Components/QuillEditor";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head, Link, useForm } from "@inertiajs/react";
-import FileInput from "@/Components/FileInput";
+import { Head, useForm } from "@inertiajs/react";
 
-export default function Create() {
-    const { data, setData, post, processing, errors } = useForm({
-        name: "",
-        nim: "",
-        password: "",
-        role: "user",
+export default function Edit({ user }) {
+    const { data, setData, put, processing, errors } = useForm({
+        name: user.name || "",
+        nim: user.nim || "",
+        password: user.password || "",
+        role: user.role || "",
+
     });
 
     const submit = (e) => {
         e.preventDefault();
-        post(route("users.store"));
+        put(route("users.update", user.id));
     };
 
     return (
         <AuthenticatedLayout>
-            <Head title="Tambah Kandidat" />
+            <Head title="Edit Data Pengguna" />
             <h1 className="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
-                Tambah Kandidat
+                Edit Data Pengguna
             </h1>
 
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md mb-6">
+            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
                 <form onSubmit={submit} className="space-y-4">
-
-
                     <div>
-                        <div className="w-full sm:w-4/5">
-                            <InputLabel htmlFor="name" value="Nama Pengguna" />
-                            <TextInput
-                                id="name"
-                                type="text"
-                                name="name"
-                                value={data.name}
-                                className="mt-1 block w-full"
-                                onChange={(e) =>
-                                    setData("name", e.target.value)
-                                }
-                                required
-                            />
-                            <InputError
-                                message={errors.name}
-                                className="mt-2"
-                            />
-                        </div>
+                        <InputLabel htmlFor="name" value="Edit Nama" />
+                        <TextInput
+                            id="name"
+                            type="text"
+                            name="name"
+                            value={data.name}
+                            className="mt-1 block w-full"
+                            onChange={(e) => setData("name", e.target.value)}
+                            required
+                        />
+                        <InputError message={errors.name} className="mt-2" />
                     </div>
 
-
-                    <div className="w-full sm:w-1/5">
-                        <InputLabel htmlFor="nim" value="NIM" />
+                    <div>
+                        <InputLabel htmlFor="name" value="Edit NIM Pengguna" />
                         <TextInput
                             id="nim"
                             type="number"
@@ -73,8 +62,8 @@ export default function Create() {
                         />
                     </div>
 
-                    <div className="w-full sm:w-1/5">
-                        <InputLabel htmlFor="password" value="Password" />
+                    <div>
+                        <InputLabel htmlFor="name" value="Edit Password Pengguna" />
                         <TextInput
                             id="password"
                             type="text"
@@ -93,7 +82,7 @@ export default function Create() {
                     </div>
 
                     <div>
-                        <InputLabel htmlFor="role" value="Role" />
+                        <InputLabel htmlFor="role" value="Edit Role" />
                         <SelectInput
                             options={[
                                 {
@@ -113,22 +102,13 @@ export default function Create() {
                         <InputError message={errors.role} className="mt-2" />
                     </div>
 
-
-
-                    <div className="flex justify-end pt-2 space-x-4">
-                        <Link
-                            as="button"
-                            className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition"
-                            href={route("users.index")}
-                        >
-                            Batal
-                        </Link>
+                    <div className="flex justify-end pt-2">
                         <Button
                             type="submit"
                             className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition"
                             disabled={processing}
                         >
-                            {processing ? "Menyimpan..." : "Simpan"}
+                            {processing ? "Menyimpan..." : "Simpan Perubahan"}
                         </Button>
                     </div>
                 </form>
