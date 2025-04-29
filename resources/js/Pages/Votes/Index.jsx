@@ -86,7 +86,7 @@ export default function Index() {
                                 .map((candidate) => (
                                     <Button
                                         key={candidate.id}
-                                        className={`p-4 border rounded-lg flex flex-col items-center justify-start transition duration-300 hover:shadow-lg 
+                                        className={`p-4 border rounded-lg flex flex-col items-center h-full transition duration-300 hover:shadow-lg 
                                                     ${
                                                         selectedCandidates[
                                                             election.id
@@ -109,20 +109,20 @@ export default function Index() {
                                         <h3 className="font-semibold text-center">
                                             {candidate.name}
                                         </h3>
-                                        <div className="text-sm text-start text-gray-700 dark:text-gray-300 mt-2">
+                                        <div className="mt-4 w-full flex flex-col gap-2">
                                             <strong>Visi:</strong>
                                             <div
-                                                className="prose prose-sm text-gray-700 dark:text-gray-300"
+                                                className="text-sm text-center text-gray-700 dark:text-gray-300"
                                                 dangerouslySetInnerHTML={{
                                                     __html: candidate.vision,
                                                 }}
                                             />
                                         </div>
 
-                                        <div className="text-sm text-start text-gray-700 dark:text-gray-300 mt-2">
+                                        <div className="mt-4 w-full flex flex-col gap-2">
                                             <strong>Misi:</strong>
                                             <div
-                                                className="prose prose-sm text-gray-700 dark:text-gray-300"
+                                                className="text-sm text-center text-gray-700 dark:text-gray-300"
                                                 dangerouslySetInnerHTML={{
                                                     __html: candidate.mission,
                                                 }}
