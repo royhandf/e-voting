@@ -17,6 +17,10 @@ class VoteController extends Controller
     public function index()
     {
         $user = auth()->user();
+    
+        $voteLogs = Vote::with(['user', 'candidate'])
+        ->latest()
+        ->get();
 
         return Inertia::render('Votes/Index', [
             'elections' => Election::where('status', 'active')
@@ -25,6 +29,7 @@ class VoteController extends Controller
                 })->get(),
             'candidates' => Candidate::all(),
             'userVotes' => Vote::where('user_id', $user->id)->pluck('election_id'),
+            'voteLogs' => $voteLogs
         ]);
     }
 

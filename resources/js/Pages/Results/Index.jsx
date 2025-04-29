@@ -1,6 +1,8 @@
 import InfoCard from "@/Components/Cards/InfoCard";
 import RoundIcon from "@/Components/RoundIcon";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+// import { Card, CardContent } from '@/components/ui/card';
+// import { Button } from '@/components/ui/button';
 import { Head, usePage } from "@inertiajs/react";
 import {
     FaUserTie,
@@ -20,42 +22,59 @@ export default function Results() {
         totalPemilihanSelesai,
         elections,
         candidates,
-        voteResults
+        voteResults,
+        votes, voteLogs
     } = usePage().props;
 
     // Fungsi untuk mendapatkan kandidat dengan suara terbanyak berdasarkan election_id
     const getTopCandidate = (electionId) => {
-        if (!voteResults || !Array.isArray(voteResults)) return "Data tidak tersedia";
+        if (!voteResults || !Array.isArray(voteResults)) return <p>Data tidak tersedia</p>;
+
+    const candidatesInElection = voteResults.filter(result => result.election_id === electionId);
+    if (candidatesInElection.length === 0) return <p>Belum ada suara</p>;
+
+    const sortedCandidates = [...candidatesInElection].sort((a, b) => b.votes - a.votes);
+    const topCandidate = sortedCandidates[0];
+    const otherCandidates = sortedCandidates.slice(1);
     
-        const candidatesInElection = voteResults.filter(result => result.election_id === electionId);
-        if (candidatesInElection.length === 0) return "Belum ada suara";
-    
-        const topCandidate = candidatesInElection.reduce((max, candidate) => 
-            candidate.votes > max.votes ? candidate : max
-        );
-    
-        return `🏆 ${topCandidate.candidate_name} (${topCandidate.votes} suara)`;
+    return (
+        <div className="text-left">
+            <p className="font-semibold">🏆 {topCandidate.candidate_name} ({topCandidate.votes} suara)</p>
+            {otherCandidates.length > 0 && (
+                <div className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                    Kandidat Lain:
+                    <ul className="list-disc list-inside">
+                        {otherCandidates.map((candidate) => (
+                            <li key={candidate.candidate_id}>
+                                {candidate.candidate_name} ({candidate.votes} suara)
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+        </div>
+    );
     };
-    
+
 
     const getCandidatesList = (electionId) => {
         if (!candidates || !Array.isArray(candidates)) return "Data tidak tersedia";
-    
+
         const candidatesInElection = candidates.filter(candidate => candidate.election_id === electionId);
-        
+
         if (candidatesInElection.length === 0) return "Tidak ada kandidat";
-    
+
         const names = candidatesInElection.map(candidate => candidate.name);
-        
+
         return `Total ${names.length} orang: ${names.join(", ")}`;
     };
-    
+
     const handleExportCSV = () => {
         if (!elections || !Array.isArray(elections)) {
             alert("Data pemilihan tidak tersedia!");
             return;
         }
-    
+
         const headers = ["Kategori Pemilihan", "Jumlah Kandidat", "Vote Terbanyak", "Status"];
         const rows = elections.map(election => [
             election.title,
@@ -63,11 +82,11 @@ export default function Results() {
             getTopCandidate(election.id),
             election.status
         ]);
-    
-        let csvContent = "data:text/csv;charset=utf-8," 
-            + headers.join(",") + "\n" 
+
+        let csvContent = "data:text/csv;charset=utf-8,"
+            + headers.join(",") + "\n"
             + rows.map(row => row.join(",")).join("\n");
-    
+
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);
@@ -76,10 +95,12 @@ export default function Results() {
         link.click();
         document.body.removeChild(link);
     };
-    
-    
-    
-    
+
+    console.log(voteResults);
+    console.log(votes);
+    console.log(voteLogs);
+
+
     return (
         <AuthenticatedLayout>
             <Head title="Hasil Pemilihan" />
@@ -128,16 +149,46 @@ export default function Results() {
                     </tbody>
                 </table>
             </div>
-            <div className="flex justify-end mb-4">
-    <button
-        onClick={handleExportCSV}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    >
-        Export to CSV
-    </button>
-</div>
 
-            
+            <div className="bg-white dark:bg-gray-800 shadow-md rounded-lg p-5 mb-10">
+                <p className="font-semibold text-gray-800 dark:text-gray-300 mb-4">
+                    Log Aktivitas Vote
+                </p>
+                <table className="w-full table-auto border mt-2">
+                    <thead>
+                        <tr className="bg-gray-200 dark:bg-gray-700">
+                            <th className="p-2">ID</th>
+                            <th className="p-2">User</th>
+                            <th className="p-2">Vote ke</th>
+                            <th className="p-2">Waktu</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {votes.map((vote) => (
+                            <tr key={vote.id}>
+                                <td className="p-2 border">{vote.id}</td>
+                                <td className="p-2 border">{vote.user?.name}</td>
+                                <td className="p-2 border">{vote.candidate?.name}</td>
+                                <td className="p-2 border">{new Date(vote.vote_time).toLocaleString()}</td>
+                            </tr>
+                        ))
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div className="flex justify-end mb-4">
+
+                <button
+                    onClick={handleExportCSV}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                    Export to CSV
+                </button>
+            </div>
+
+
         </AuthenticatedLayout>
     );
 }

@@ -33,7 +33,7 @@ class Candidate extends Model
 
     public function getPhotoUrlAttribute()
     {
-        return $this->attributes['photo_url']
+        return $this->attributes['photo_url'] ?? null
             ? asset("storage/{$this->attributes['photo_url']}")
             : null;
     }
