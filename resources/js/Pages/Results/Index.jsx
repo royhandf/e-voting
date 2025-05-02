@@ -115,16 +115,16 @@ export default function Results() {
                 <table className="w-full table-auto border-collapse">
                     <thead>
                         <tr className="bg-gray-100 dark:bg-gray-700">
-                            <th className="px-0 py-2 border border-gray-300 dark:border-gray-600">
+                            <th className="px-4 py-2">
                                 Kategori Pemilihan
                             </th>
-                            <th className="px-0 py-2 border border-gray-300 dark:border-gray-600">
+                            <th className="px-4 py-2">
                                 Jumlah Kandidat
                             </th>
-                            <th className="px-0 py-2 border border-gray-300 dark:border-gray-600">
+                            <th className="px-4 py-2">
                                 Vote Terbanyak
                             </th>
-                            <th className="px-0 py-2 border border-gray-300 dark:border-gray-600">
+                            <th className="px-4 py-2">
                                 Status
                             </th>
                         </tr>
@@ -157,19 +157,19 @@ export default function Results() {
                 <table className="w-full table-auto border mt-2">
                     <thead>
                         <tr className="bg-gray-200 dark:bg-gray-700">
-                            <th className="p-2">ID</th>
-                            <th className="p-2">User</th>
-                            <th className="p-2">Vote ke</th>
-                            <th className="p-2">Waktu</th>
+                            <th className="px-4 py-2">ID</th>
+                            <th className="px-4 py-2">User</th>
+                            <th className="px-4 py-2">Vote ke</th>
+                            <th className="px-4 py-2">Waktu</th>
                         </tr>
                     </thead>
                     <tbody>
                         {votes.map((vote) => (
                             <tr key={vote.id}>
-                                <td className="p-2 border">{vote.id}</td>
-                                <td className="p-2 border">{vote.user?.name}</td>
-                                <td className="p-2 border">{vote.candidate?.name}</td>
-                                <td className="p-2 border">{new Date(vote.vote_time).toLocaleString()}</td>
+                                <td className="px-4 py-2 border">{vote.id}</td>
+                                <td className="px-4 py-2 border">{vote.user?.name}</td>
+                                <td className="px-4 py-2 border">{vote.candidate?.name}</td>
+                                <td className="px-4 py-2 border">{new Date(vote.vote_time).toLocaleString()}</td>
                             </tr>
                         ))
                         }
