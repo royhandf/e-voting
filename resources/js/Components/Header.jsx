@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
-import { SidebarContext } from "../context/SidebarContext";
-import { ThemeContext } from "../context/ThemeContext";
+import { SidebarContext } from "@/Context/SidebarContext";
+import { ThemeContext } from "@/Context/ThemeContext";
 import { FaMoon, FaSun } from "react-icons/fa";
 import {
     IoMenu,
