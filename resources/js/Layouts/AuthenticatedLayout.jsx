@@ -2,7 +2,7 @@ import React, { Suspense, useContext, useEffect } from "react";
 import { usePage } from "@inertiajs/react";
 import Header from "@/Components/Header";
 import Sidebar from "@/Components/Sidebar";
-import ThemedSuspense from "../components/ThemedSuspense";
+import ThemedSuspense from "@/Components/ThemedSuspense";
 import { SidebarContext } from "@/Context/SidebarContext";
 
 export default function AuthenticatedLayout({ children }) {
