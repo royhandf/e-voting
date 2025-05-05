@@ -13,7 +13,7 @@ export default function FeatureCard({ icon, title, description }) {
 
     return (
         <motion.div
-            className="flex flex-col items-center text-center p-6 bg-white shadow-md rounded-lg w-full max-w-sm mx-auto" // Responsif
+            className="flex flex-col items-center text-center p-8 bg-white rounded-lg w-full max-w-sm mx-auto border border-gray-200 shadow-sm hover:shadow-xl transition-shadow duration-300 ease-in-out"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }}

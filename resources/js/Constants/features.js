@@ -3,7 +3,7 @@ export const features = [
         icon: "IoShieldHalfOutline",
         title: "Keamanan Terjamin",
         description:
-            "Setiap pemilih harus melakukan autentikasi sebelum memberikan suara, memastikan hanya pengguna terverifikasi yang dapat berpartisipasi.",
+            "Pemilih harus melakukan autentikasi sebelum memberikan suara, memastikan hanya pengguna terverifikasi yang dapat berpartisipasi.",
     },
     {
         icon: "AiFillClockCircle",
@@ -15,6 +15,6 @@ export const features = [
         icon: "IoBarChart",
         title: "Transparansi Data",
         description:
-            "Hasil pemilihan akan ditampilkan secara real-time dan terbuka untuk umum, memastikan integritas dan transparansi proses pemilihan.",
+            "Hasil pemilihan akan ditampilkan secara real-time, memastikan integritas dan transparansi proses pemilihan.",
     },
 ];

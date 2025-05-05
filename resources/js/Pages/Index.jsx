@@ -60,7 +60,7 @@ export default function Index() {
                     rel="stylesheet"
                 />
             </Head>
-            <div className="min-h-screen font-[Poppins] bg-white text-gray-900">
+            <div className="font-[Poppins] bg-white text-gray-900">
                 <motion.nav
                     initial={{ y: -100, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
@@ -167,28 +167,57 @@ export default function Index() {
                                 >
                                     &times;
                                 </Button>
-                                <li className="text-lg font-semibold text-gray-900">
+                                <ScrollLink
+                                    to="home"
+                                    smooth={true}
+                                    duration={500}
+                                    offset={-90}
+                                    className="text-lg font-semibold text-gray-900 cursor-pointer"
+                                    onClick={() => setIsOpen(false)}
+                                >
                                     Beranda
-                                </li>
-                                <li className="text-lg text-gray-700 cursor-pointer">
-                                    Fitur
-                                </li>
-                                <li className="text-lg text-gray-700 cursor-pointer">
+                                </ScrollLink>
+                                <ScrollLink
+                                    to="feature"
+                                    smooth={true}
+                                    duration={500}
+                                    offset={-90}
+                                    className="text-lg text-gray-700 cursor-pointer"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    Tentang
+                                </ScrollLink>
+                                <ScrollLink
+                                    to="candidates"
+                                    smooth={true}
+                                    duration={500}
+                                    offset={-90}
+                                    className="text-lg text-gray-700 cursor-pointer"
+                                    onClick={() => setIsOpen(false)}
+                                >
                                     Kandidat
-                                </li>
-                                <li className="text-lg text-gray-700 cursor-pointer">
-                                    Live
-                                </li>
-                                <button className="bg-purple-600 text-white font-semibold px-6 py-3 rounded-full shadow-md hover:bg-purple-700 transition">
-                                    Masuk
-                                </button>
+                                </ScrollLink>
+                                <ScrollLink
+                                    to="testimonials"
+                                    smooth={true}
+                                    duration={500}
+                                    offset={-90}
+                                    className="text-lg text-gray-700 cursor-pointer"
+                                    onClick={() => setIsOpen(false)}
+                                >
+                                    Testimoni
+                                </ScrollLink>
+                                <Link href="/login" passHref>
+                                    <Button className="bg-purple-600 text-white font-semibold px-6 py-3 rounded-full shadow-md hover:bg-purple-700 transition">
+                                        Masuk
+                                    </Button>
+                                </Link>
                             </motion.ul>
                         )}
                     </div>
                 </motion.nav>
-
                 <motion.section
-                    className="flex flex-col bg md:flex-row justify-between items-center px-6 pt-24 mx-auto my-0 max-w-screen-xl"
+                    className="flex flex-col-reverse gap-0 bg md:flex-row justify-between items-center mx-auto my-0 max-w-screen-xl md:min-h-screen px-6 pt-[100px] sm:pt-[75px] md:pt-[60px] pb-20"
                     id="home"
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -265,23 +294,23 @@ export default function Index() {
                     </motion.div>
                 </motion.section>
 
+                <hr />
+
                 <motion.section
                     ref={featureRef}
                     id="feature"
                     initial={{ opacity: 0, y: 50 }}
                     animate={inViewFeature ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="px-0 py-20 m-0 bg-gray-100"
+                    className="px-0 pt-[110px] md:pb-0 m-0 md:min-h-screen"
                 >
                     <div className="px-6 py-0 mx-auto my-0 max-w-screen-xl text-center">
-                        <h2 className="mb-4 text-3xl text-gray-800 font-semibold">
+                        <h2 className="mb-8 text-4xl text-gray-800 font-semibold">
                             Mengapa Memilih E-Voting?
                         </h2>
-                        <p className="mb-16 text-base text-gray-600 max-w-3xl mx-auto">
-                            Platform pemilihan digital terdepan yang
-                            menggabungkan teknologi modern dengan keamanan
-                            tingkat tinggi untuk mewujudkan demokrasi digital
-                            yang inklusif dan dapat dipercaya.
+                        <p className="mb-20 text-base text-gray-600 max-w-3xl mx-auto">
+                            Sistem pemilihan digital modern yang cepat, aman,
+                            dan transparan .
                         </p>
                         <div className="flex gap-8 justify-center max-md:flex-col">
                             {features.map((feature, index) => (
@@ -299,24 +328,24 @@ export default function Index() {
                 <motion.section
                     id="candidates"
                     ref={candidatesRef}
-                    className="px-6 py-20 bg-white"
+                    className="px-0 pt-[110px] pb-5 md:pb-10 m-0 md:min-h-screen bg-[#FAFAF9]"
                     initial={{ opacity: 0, y: 30 }}
                     animate={inViewCandidates ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.8 }}
                 >
                     <div className="px-6 mx-auto max-w-screen-xl text-center">
-                        <h2 className="mb-4 text-3xl text-gray-800">
+                        <h2 className="mb-8 text-4xl text-gray-800 font-semibold">
                             Kandidat Pemilwa
                         </h2>
                         <p className="mb-16 text-base text-gray-600">
-                            Daftar kandidat yang akan bertarung dalam pemilihan
-                            mahasiswa UIN Malang.
+                            Daftar kandidat dalam pemilihan mahasiswa UIN
+                            Malang.
                         </p>
 
                         {elections.map((election, index) => (
                             <motion.div
                                 key={election.id}
-                                className="mb-16"
+                                className="mb-16 "
                                 initial={{ opacity: 0, y: 30 }}
                                 animate={
                                     inViewCandidates ? { opacity: 1, y: 0 } : {}
@@ -346,7 +375,7 @@ export default function Index() {
                                     {election.candidates.map((candidate) => (
                                         <motion.div
                                             key={candidate.id}
-                                            className="w-[300px] h-[400px] bg-white shadow-md rounded-lg overflow-hidden cursor-pointer"
+                                            className="w-[300px] h-[400px] bg-white border border-gray-200 shadow-sm rounded-lg overflow-hidden cursor-pointer hover:shadow-xl transition-shadow duration-300 ease-in-out"
                                             whileHover={{ scale: 1.05, y: -5 }}
                                             whileTap={{ scale: 0.98 }}
                                             onClick={() =>
@@ -422,16 +451,15 @@ export default function Index() {
                     initial={{ opacity: 0, y: 50 }}
                     animate={inViewTestimonial ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.6 }}
-                    className="relative px-6 py-20 text-center bg-gray-100"
+                    className="relative px-4 sm:px-6 pt-[110px] m-0 md:min-h-[90vh] pb-16 md:pb-10 text-center"
                 >
                     <div className="mx-auto my-0 w-full max-w-[1200px]">
-                        <h2 className="mb-4 text-3xl text-center text-gray-800">
+                        <h2 className="mb-8 text-4xl text-gray-800 font-semibold">
                             Apa Kata Mereka?
                         </h2>
-                        <p className="mx-auto mt-0 mb-12 text-base text-center text-gray-600 max-w-[600px]">
+                        <p className="mx-auto mt-0 mb-16 text-base text-center text-gray-600 max-w-[600px]">
                             Dengarkan pengalaman mereka yang telah menggunakan
-                            sistem <br />
-                            e-voting kami.
+                            platform kami.
                         </p>
 
                         <Swiper
@@ -475,7 +503,7 @@ export default function Index() {
                 </motion.section>
 
                 <motion.footer
-                    className="py-12 bg-white text-gray-900"
+                    className="bg-white border-t border-gray-200 py-12"
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8 }}
@@ -487,9 +515,10 @@ export default function Index() {
                                     <div>
                                         <img
                                             src={Logo}
-                                            alt="Pemilwa UIN Malang"
-                                            className="h-20 mx-auto md:mx-0 mb-4"
+                                            alt="Logo"
+                                            className="h-20 mb-4"
                                         />
+
                                         <h2 className="text-xl font-bold text-gray-900">
                                             Pemilwa UIN Malang
                                         </h2>
