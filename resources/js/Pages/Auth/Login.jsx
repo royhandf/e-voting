@@ -31,7 +31,7 @@ export default function Login({ status, canResetPassword }) {
             )}
 
             <div className="flex justify-center items-center min-h-screen w-full bg-gray-100 dark:bg-gray-800">
-                <div className="w-full max-w-md sm:max-w-lg bg-white dark:bg-gray-900 p-10 rounded-lg shadow-xl">
+                <div className="w-full max-w-md sm:max-w-lg bg-white dark:bg-gray-900 px-6 py-10 sm:px-10 rounded-lg shadow-xl mx-4">
                     <h2 className="text-3xl font-semibold text-center text-gray-800 dark:text-white mb-6">
                         Log in
                     </h2>
