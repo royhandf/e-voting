@@ -2,7 +2,7 @@ import React from "react";
 
 const TestimonialCard = ({ image, name, testimonial }) => {
     return (
-        <figure className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm h-full flex flex-col flex-1 min-h-[300px]">
+        <figure className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm h-full flex flex-col flex-1 min-h-[270px]">
             <figcaption className="flex items-center space-x-4 mb-4">
                 <img
                     src={image}
@@ -17,7 +17,7 @@ const TestimonialCard = ({ image, name, testimonial }) => {
             </figcaption>
 
             <blockquote className="flex-grow">
-                <p className="text-lg text-gray-700 leading-relaxed italic">
+                <p className="text-md text-gray-700 leading-relaxed italic">
                     &ldquo;{testimonial}&rdquo;
                 </p>
             </blockquote>

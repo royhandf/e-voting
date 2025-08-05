@@ -226,7 +226,7 @@ export default function Index() {
                         </motion.div>
 
                         <motion.div
-                            className="relative w-full flex items-center justify-center"
+                            className="hidden lg:flex relative w-full items-center justify-center"
                             initial={{ opacity: 0, scale: 0.8 }}
                             animate={{ opacity: 1, scale: 1 }}
                             transition={{
