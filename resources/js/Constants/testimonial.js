@@ -15,7 +15,7 @@ export const testimonialData = [
         name: "Siti Rahmawati",
         image: "https://ui-avatars.com/api/?name=Siti%20Rahmawati&background=random&rounded=true",
         testimonial:
-            '"Pengalaman menggunakan sistem Pemilwa e-voting sangat menyenangkan. Hasil yang cepat dan bisa dipercaya sangat membantu proses pemilihan yang lebih efisien."',
+            '"Pengalaman yang menarik menggunakan sistem e-voting. Hasil yang cepat dan bisa dipercaya sangat membantu proses pemilihan yang lebih efisien."',
     },
     {
         name: "Budi Santoso",

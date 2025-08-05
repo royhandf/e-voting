@@ -1,19 +1,28 @@
-export default function TestimonialCard({ image, name, testimonial }) {
+import React from "react";
+
+const TestimonialCard = ({ image, name, testimonial }) => {
     return (
-        <div className="bg-white border border-gray-200 shadow-sm hover:shadow-xl transition-shadow duration-300 ease-in-out p-6 rounded-lg h-[250px] flex flex-col justify-between">
-            <div className="flex items-center gap-4 mb-6">
+        <figure className="bg-white p-8 rounded-2xl border border-gray-200 shadow-sm h-full flex flex-col flex-1 min-h-[300px]">
+            <figcaption className="flex items-center space-x-4 mb-4">
                 <img
                     src={image}
                     alt={name}
-                    className="w-10 h-10 rounded-full"
+                    className="w-10 h-10 rounded-full object-cover flex-shrink-0"
                 />
-                <div>
-                    <h3 className="text-lg font-semibold text-gray-800">
+                <div className="text-left">
+                    <div className="text-gray-900 font-semibold text-lg">
                         {name}
-                    </h3>
+                    </div>
                 </div>
-            </div>
-            <p className="text-gray-600 flex-grow text-left">{testimonial}</p>
-        </div>
+            </figcaption>
+
+            <blockquote className="flex-grow">
+                <p className="text-lg text-gray-700 leading-relaxed italic">
+                    &ldquo;{testimonial}&rdquo;
+                </p>
+            </blockquote>
+        </figure>
     );
-}
+};
+
+export default TestimonialCard;
