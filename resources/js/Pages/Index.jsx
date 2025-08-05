@@ -556,7 +556,7 @@ export default function Index() {
                 </motion.section>
 
                 <motion.footer
-                    className="bg-slate-900 text-gray-300 pt-20 pb-16"
+                    className="bg-purple-950 text-gray-300 pt-20 pb-16"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.8, delay: 0.5 }}
