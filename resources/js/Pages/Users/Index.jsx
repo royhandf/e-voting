@@ -1,16 +1,16 @@
-import { Head, Link, usePage } from "@inertiajs/react";
+import { Head, Link, router, usePage } from "@inertiajs/react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import Pagination from "@/Components/Pagination";
-import { IoTrash, IoSearch, IoEye, IoAdd } from "react-icons/io5";
+import { IoTrash, IoSearch, IoAdd } from "react-icons/io5";
 import { HiOutlinePencilAlt } from "react-icons/hi";
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
+import Button from "@/Components/Button";
 
 export default function Users() {
-    const { users } = usePage().props;
+    const { users, flash } = usePage().props;
     const [searchTerm, setSearchTerm] = useState("");
-    const [filteredUsers, setFilteredUsers] = useState(
-        users.data
-    );
+    const [filteredUsers, setFilteredUsers] = useState(users.data);
 
     useEffect(() => {
         const delaySearch = setTimeout(() => {
@@ -22,6 +22,59 @@ export default function Users() {
 
         return () => clearTimeout(delaySearch);
     }, [searchTerm, users.data]);
+
+    useEffect(() => {
+        if (flash?.success) {
+            const isDarkMode =
+                document.documentElement.classList.contains("dark");
+
+            Swal.fire({
+                title: "Berhasil!",
+                text: flash.success,
+                icon: "success",
+                confirmButtonText: "OK",
+                background: isDarkMode ? "#1a202c" : "#fff",
+                color: isDarkMode ? "#fff" : "#000",
+            });
+        }
+    }, [flash]);
+
+    const handleDelete = (id) => {
+        const isDarkMode = document.documentElement.classList.contains("dark");
+
+        Swal.fire({
+            title: "Apakah Anda yakin?",
+            text: "Pengguna ini akan dihapus secara permanen.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Ya, hapus",
+            cancelButtonText: "Batal",
+            confirmButtonColor: "#dc2626",
+            cancelButtonColor: "#4f46e5",
+            background: isDarkMode ? "#1a202c" : "#fff",
+            color: isDarkMode ? "#fff" : "#000",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.delete(route("users.destroy", id), {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        Swal.fire(
+                            "Berhasil!",
+                            "Pengguna berhasil dihapus.",
+                            "success"
+                        );
+                    },
+                    onError: () => {
+                        Swal.fire(
+                            "Gagal!",
+                            "Terjadi kesalahan saat menghapus pengguna.",
+                            "error"
+                        );
+                    },
+                });
+            }
+        });
+    };
 
     return (
         <AuthenticatedLayout>
@@ -65,44 +118,24 @@ export default function Users() {
                             filteredUsers.map((user, index) => (
                                 <tr key={user.id} className="border-b">
                                     <td className="px-4 py-2">{index + 1}</td>
-                                    <td className="px-4 py-2">
-                                        {user.nim}
-                                    </td>
-                                    <td className="px-4 py-2">
-                                    {user.name}
-                                    </td>
+                                    <td className="px-4 py-2">{user.nim}</td>
+                                    <td className="px-4 py-2">{user.name}</td>
                                     <td className="flex items-center space-x-2 p-2">
                                         <Link
-                                            href={route(
-                                                "users.show",
-                                                user.id
-                                            )}
-                                            className="flex items-center justify-center w-7 h-7 text-white bg-blue-500 rounded-md hover:bg-blue-600 transition"
-                                        >
-                                            <IoEye size={16} />
-                                        </Link>
-
-                                        <Link
-                                            href={route(
-                                                "users.edit",
-                                                user.id
-                                            )}
+                                            href={route("users.edit", user.id)}
                                             className="flex items-center justify-center w-7 h-7 text-white bg-yellow-500 rounded-md hover:bg-yellow-600 transition"
                                         >
                                             <HiOutlinePencilAlt size={16} />
                                         </Link>
 
-                                        <Link
-                                            href={route(
-                                                "users.destroy",
-                                                user.id
-                                            )}
-                                            method="delete"
-                                            as="button"
+                                        <Button
+                                            onClick={() =>
+                                                handleDelete(user.id)
+                                            }
                                             className="flex items-center justify-center w-7 h-7 text-white bg-red-500 rounded-md hover:bg-red-600 transition"
                                         >
                                             <IoTrash size={16} />
-                                        </Link>
+                                        </Button>
                                     </td>
                                 </tr>
                             ))
