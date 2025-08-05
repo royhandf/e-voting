@@ -17,8 +17,8 @@ const TestimonialCard = ({ image, name, testimonial }) => {
             </figcaption>
 
             <blockquote className="flex-grow">
-                <p className="text-md text-gray-700 leading-relaxed italic">
-                    &ldquo;{testimonial}&rdquo;
+                <p className="text-gray-700 leading-relaxed italic">
+                    {testimonial}
                 </p>
             </blockquote>
         </figure>
