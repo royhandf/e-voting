@@ -4,8 +4,9 @@ import Button from "@/Components/Button";
 import TextInput from "@/Components/TextInput";
 import { Head, useForm } from "@inertiajs/react";
 import { HiOutlineUser, HiOutlineLockClosed } from "react-icons/hi";
+import { toast } from "react-toastify";
 
-export default function Login({ status }) {
+export default function Login() {
     const { data, setData, post, processing, errors, reset } = useForm({
         nim: "",
         password: "",
@@ -13,8 +14,19 @@ export default function Login({ status }) {
 
     const submit = (e) => {
         e.preventDefault();
+
         post(route("login"), {
-            onFinish: () => reset("password"),
+            onSuccess: () => {
+                toast.success("Anda telah berhasil masuk!");
+            },
+            onError: (errors) => {
+                if (errors.auth) {
+                    toast.error(errors.auth);
+                }
+            },
+            onFinish: () => {
+                reset("password");
+            },
         });
     };
 
@@ -46,12 +58,6 @@ export default function Login({ status }) {
                                 Gunakan NIM dan password Anda.
                             </p>
                         </div>
-
-                        {status && (
-                            <div className="mb-4 text-sm font-medium text-green-600 bg-green-100 dark:bg-green-900 dark:text-green-300 p-3 rounded-md">
-                                {status}
-                            </div>
-                        )}
 
                         <form onSubmit={submit} className="space-y-6">
                             <div>
