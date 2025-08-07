@@ -50,6 +50,10 @@ export default function Index() {
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
+    useEffect(() => {
+        document.documentElement.classList.remove("dark");
+    }, []);
+
     return (
         <>
             <Head title="E-Voting">
