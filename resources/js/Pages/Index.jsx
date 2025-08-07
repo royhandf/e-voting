@@ -304,7 +304,7 @@ export default function Index() {
                     </div>
                 </motion.section>
 
-                <motion.section id="langkah" className="py-24">
+                <motion.section id="alur" className="py-24">
                     <div className="max-w-screen-xl mx-auto px-6 text-center">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
@@ -507,7 +507,7 @@ export default function Index() {
 
                 <motion.section
                     id="testimoni"
-                    className="py-24 "
+                    className="py-24 overflow-hidden"
                     ref={testimonialRef}
                 >
                     <div className="max-w-screen-xl mx-auto px-6">
