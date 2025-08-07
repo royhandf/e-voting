@@ -194,51 +194,39 @@ export default function Candidates() {
             />
 
             <Modal
-                title="Detail Kandidat"
+                title={selectedCandidate?.name}
                 isOpen={isOpen}
                 onClose={() => setIsOpen(false)}
                 size="xl"
             >
                 {selectedCandidate && (
-                    <div className="p-4">
-                        <div className="flex flex-col items-center mb-4">
-                            <img
-                                src={selectedCandidate.photo_url}
-                                alt={selectedCandidate.name}
-                                className="w-60 h-60 rounded-full object-cover border"
-                            />
-                            <h2 className="text-lg font-bold mt-2">
-                                {selectedCandidate.name}
-                            </h2>
-                            <span className="text-sm text-gray-500 dark:text-gray-400">
-                                {selectedCandidate.election?.title ||
-                                    "Tanpa Pemilihan"}
-                            </span>
-                            <span className="text-xs text-gray-500 dark:text-gray-400">
-                                Nomor Urut -{" "}
-                                {selectedCandidate.number || "Belum Ditentukan"}
-                            </span>
-                        </div>
+                    <div className="flex flex-col items-center p-4">
+                        <img
+                            src={selectedCandidate.photo_url}
+                            alt={selectedCandidate.name}
+                            className="w-1/2 md:w-1/3 mx-auto rounded-lg shadow-lg mb-6"
+                        />
 
-                        <div className="mt-4">
-                            <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-200">
-                                Visi:
-                            </h3>
-                            <p className="text-sm text-gray-700 dark:text-gray-300">
-                                {selectedCandidate.vision}
-                            </p>
-                        </div>
-
-                        <div className="mt-4">
-                            <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-200">
-                                Misi:
-                            </h3>
+                        <div className="w-full text-left">
+                            <h4 className="text-xl font-bold text-purple-600 mt-6 mb-2 border-b pb-2">
+                                Visi
+                            </h4>
                             <div
-                                className="prose prose-sm text-gray-700 dark:text-gray-300"
+                                className="prose prose-sm max-w-none text-gray-600"
+                                dangerouslySetInnerHTML={{
+                                    __html: selectedCandidate.vision,
+                                }}
+                            ></div>
+
+                            <h4 className="text-xl font-bold text-purple-600 mt-6 mb-2 border-b pb-2">
+                                Misi
+                            </h4>
+                            <div
+                                className="prose prose-sm max-w-none text-gray-600"
                                 dangerouslySetInnerHTML={{
                                     __html: selectedCandidate.mission,
                                 }}
-                            />
+                            ></div>
                         </div>
                     </div>
                 )}

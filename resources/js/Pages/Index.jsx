@@ -37,7 +37,7 @@ export default function Index() {
         threshold: 0.1,
     });
 
-    const { ref: testimonialRef, inView: inViewTestimonial } = useInView({
+    const { ref: testimonialRef } = useInView({
         triggerOnce: true,
         threshold: 0.1,
     });
@@ -473,6 +473,7 @@ export default function Index() {
                                         alt={selectedCandidate.name}
                                         className="w-1/2 md:w-1/3 mx-auto rounded-lg shadow-lg mb-6"
                                     />
+
                                     <div className="w-full text-left">
                                         <h4 className="text-xl font-bold text-purple-600 mt-4 mb-2 border-b pb-2">
                                             Visi
