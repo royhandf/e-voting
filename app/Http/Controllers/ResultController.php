@@ -2,34 +2,63 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Candidate;
 use App\Models\Election;
 use App\Models\User;
 use App\Models\Vote;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Exports\ElectionResultExport;
+use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Str;
 
 class ResultController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $elections = Election::withCount('candidates')->get(['id', 'title', 'status', 'end_date']);
-        $voteResults = Vote::selectRaw('votes.election_id, candidates.name as candidate_name, COUNT(*) as votes')
-            ->join('candidates', 'votes.candidate_id', '=', 'candidates.id')
-            ->groupBy('votes.election_id', 'votes.candidate_id', 'candidates.name')
+        $elections = Election::where('status', 'closed')
+            ->orWhereNotNull('archived_at')
+            ->orderBy('end_date', 'desc')
             ->get();
-            $votes = Vote::with(['user:id,name', 'candidate:id,name,photo_url', 'election:id,title']) 
-            ->orderBy('created_at', 'desc')
-            ->get(['id', 'user_id', 'candidate_id', 'election_id', 'created_at']);
-        
+
+        $selectedElection = null;
+        $stats = null;
+        $results = null;
+        $winner = null;
+
+        if ($request->has('election_id') && $request->election_id) {
+            $selectedElection = Election::with('candidates')->find($request->election_id);
+
+            if ($selectedElection) {
+                $totalVoters = User::where('role', 'user')->count();
+                $totalVotes = Vote::where('election_id', $selectedElection->id)->count();
+                $turnout = $totalVoters > 0 ? ($totalVotes / $totalVoters) * 100 : 0;
+
+                $stats = [
+                    'totalVoters' => $totalVoters,
+                    'totalVotes' => $totalVotes,
+                    'turnout' => round($turnout, 2),
+                ];
+
+                $results = $selectedElection->candidates()
+                    ->withCount('votes')
+                    ->orderBy('votes_count', 'desc')
+                    ->get();
+
+                $winner = $results->first();
+            }
+        }
 
         return Inertia::render('Results/Index', [
-            'totalPemilih' => User::where('role', 'user')->count(),
-            'totalKandidat' => Candidate::count(),
-            'totalPemilihanAktif' => Election::where('status', 'active')->count(),
-            'totalPemilihanSelesai' => Election::where('status', 'closed')->count(),
             'elections' => $elections,
-            'voteResults' => $voteResults,
-            'votes' => $votes,
+            'selectedElection' => $selectedElection,
+            'stats' => $stats,
+            'results' => $results,
+            'winner' => $winner,
         ]);
+    }
+
+    public function exportExcel(Election $election)
+    {
+        return Excel::download(new ElectionResultExport($election->id), 'Hasil-' . Str::slug($election->title) . '.xlsx');
     }
 }

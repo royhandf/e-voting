@@ -23,7 +23,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('candidates', CandidateController::class);
     Route::resource('users', UserController::class);
     Route::resource('elections', ElectionController::class);
-    Route::resource('results', ResultController::class);
+    Route::get('results', [ResultController::class, 'index'])->name('results.index');
+    Route::get('results/{election}/excel', [ResultController::class, 'exportExcel'])->name('results.export.excel');
     Route::get('/audit-trail', [AuditTrailController::class, 'index'])->name('audit.index');
 });
 
