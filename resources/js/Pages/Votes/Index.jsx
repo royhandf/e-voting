@@ -8,7 +8,6 @@ import Modal from "@/Components/Modal";
 import BottomSheet from "@/Components/BottomSheet";
 import useMediaQuery from "@/Hooks/useMediaQuery";
 
-// Komponen ini tidak perlu diubah, sudah bagus.
 const CandidateDetailContent = ({ candidate, onVote }) => (
     <div>
         <div className="flex flex-col items-center text-center">
@@ -53,9 +52,6 @@ const CandidateDetailContent = ({ candidate, onVote }) => (
 );
 
 export default function Index() {
-    // --- PERUBAHAN 1: Mengambil props ---
-    // Kita hanya menerima 'elections' dari controller.
-    // 'candidates' dan 'userVotes' sudah tidak ada lagi.
     const { elections } = usePage().props;
 
     const [selectedCandidates, setSelectedCandidates] = useState({});
@@ -65,7 +61,6 @@ export default function Index() {
     });
     const isDesktop = useMediaQuery("(min-width: 1024px)");
 
-    // Fungsi handleVote tidak perlu diubah, sudah benar.
     const handleVote = (electionId, candidateId, candidateName) => {
         setDetailViewState({ isOpen: false, candidate: null });
 
@@ -107,15 +102,9 @@ export default function Index() {
     };
 
     const handleCandidateClick = (candidate) => {
-        // Logika untuk memilih kandidat di UI, tidak perlu diubah
         setSelectedCandidates({ [candidate.election_id]: candidate.id });
         setDetailViewState({ isOpen: true, candidate: candidate });
     };
-
-    // --- PERUBAHAN 2: Hapus filter manual ---
-    // Controller sudah mengirimkan data pemilihan yang BISA divote,
-    // jadi kita tidak perlu memfilternya lagi di sini.
-    // const availableElections = elections.filter(...); // HAPUS BARIS INI
 
     return (
         <AuthenticatedLayout>
@@ -134,7 +123,6 @@ export default function Index() {
                 </div>
             ) : (
                 <div className="space-y-10">
-                    {/* Langsung gunakan 'elections' dari props */}
                     {elections.map((election) => (
                         <div
                             key={election.id}
@@ -144,7 +132,6 @@ export default function Index() {
                                 {election.title}
                             </h2>
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-5">
-                                {/* --- PERUBAHAN 3: Ambil kandidat dari 'election.candidates' --- */}
                                 {election.candidates.map((candidate) => (
                                     <div
                                         key={candidate.id}
@@ -187,7 +174,6 @@ export default function Index() {
                 </div>
             )}
 
-            {/* Bagian Modal dan BottomSheet tidak perlu diubah */}
             {isDesktop ? (
                 <Modal
                     title="Detail Kandidat"
