@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
+use OwenIt\Auditing\Auditable as AuditableTrait;
 
-class Vote extends Model
+class Vote extends Model implements Auditable
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuids, AuditableTrait;
 
     protected $fillable = [
         'user_id',
@@ -20,13 +22,6 @@ class Vote extends Model
     protected $casts = [
         'vote_time' => 'datetime',
     ];
-
-    public static function hasUserVoted($userId, $electionId)
-    {
-        return self::where('user_id', $userId)
-            ->where('election_id', $electionId)
-            ->exists();
-    }
 
     public function user()
     {

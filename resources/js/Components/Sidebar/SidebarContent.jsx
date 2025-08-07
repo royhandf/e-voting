@@ -7,6 +7,7 @@ import {
     IoCheckboxOutline,
     IoDocumentTextOutline,
     IoTimeOutline,
+    IoShieldCheckmarkOutline,
 } from "react-icons/io5";
 
 export const adminRoutes = [
@@ -30,6 +31,11 @@ export const adminRoutes = [
         name: "Laporan dan Hasil",
         path: "/results",
         icon: IoDocumentTextOutline,
+    },
+    {
+        name: "Audit Trail",
+        path: "/audit-trail",
+        icon: IoShieldCheckmarkOutline,
     },
 ];
 

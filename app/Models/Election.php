@@ -6,10 +6,12 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
+use OwenIt\Auditing\Auditable as AuditableTrait;
 
-class Election extends Model
+class Election extends Model implements Auditable
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuids, AuditableTrait;
 
     protected $fillable = [
         'title',
@@ -42,5 +44,16 @@ class Election extends Model
     public function getEndDateAttribute($value)
     {
         return Carbon::parse($value)->format('Y-m-d H:i:s');
+    }
+
+    protected static function booted()
+    {
+        static::updated(function ($election) {
+            if ($election->isDirty('status') && $election->status === 'ended') {
+                Vote::where('election_id', $election->id)
+                    ->whereNotNull('user_id')
+                    ->update(['user_id' => null]);
+            }
+        });
     }
 }
