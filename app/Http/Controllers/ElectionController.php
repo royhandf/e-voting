@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Election;
+use App\Models\Vote;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -14,24 +15,12 @@ class ElectionController extends Controller
      */
     public function index()
     {
-        $elections = Election::orderBy('start_date', 'desc')->paginate(10);
+        $elections = Election::whereNull('archived_at')
+            ->orderBy('start_date', 'desc')
+            ->paginate(10);
 
-        $elections->getCollection()->transform(function ($election) {
-            return [
-                'id' => $election->id,
-                'title' => $election->title,
-                'start_date' => $election->start_date,
-                'end_date' => $election->end_date,
-                'status' => $election->status,
-            ];
-        });
-
-        return Inertia::render('Elections/Index', [
-            'elections' => $elections
-        ]);
+        return Inertia::render('Elections/Index', ['elections' => $elections]);
     }
-
-
 
     /**
      * Show the form for creating a new resource.
@@ -50,11 +39,7 @@ class ElectionController extends Controller
             'title' => 'required|string|max:255',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after:start_date',
-            'status' => 'required|in:pending,active,closed',
         ]);
-
-        $validated['start_date'] = Carbon::parse($validated['start_date'])->format('Y-m-d H:i:s');
-        $validated['end_date'] = Carbon::parse($validated['end_date'])->format('Y-m-d H:i:s');
 
         Election::create($validated);
 
@@ -82,19 +67,13 @@ class ElectionController extends Controller
      */
     public function update(Request $request, Election $election)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'start_date' => 'required|date',
-            'end_date' => 'required|date|after:start_date',
-            'status' => 'required|in:pending,active,closed',
+            'end_date' => 'required|date|after_or_equal:start_date',
         ]);
 
-        $election->update([
-            'title' => $request->title,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'status' => $request->status,
-        ]);
+        $election->update($validated);
 
         return redirect()->route('elections.index')->with('success', 'Pemilihan berhasil diperbarui.');
     }

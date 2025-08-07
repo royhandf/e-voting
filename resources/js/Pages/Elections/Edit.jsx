@@ -11,7 +11,6 @@ export default function Edit({ election }) {
         title: election.title,
         start_date: election.start_date,
         end_date: election.end_date,
-        status: election.status,
     });
 
     const submit = (e) => {
@@ -84,21 +83,6 @@ export default function Edit({ election }) {
                             message={errors.end_date}
                             className="mt-2"
                         />
-                    </div>
-
-                    <div>
-                        <InputLabel htmlFor="status" value="Status" />
-                        <SelectInput
-                            options={[
-                                { value: "pending", label: "Pending" },
-                                { value: "active", label: "Active" },
-                                { value: "closed", label: "Closed" },
-                            ]}
-                            value={data.status}
-                            onChange={(e) => setData("status", e.target.value)}
-                            className="w-full px-3 py-2 border rounded-md focus:ring focus:ring-purple-500"
-                        />
-                        <InputError message={errors.status} className="mt-2" />
                     </div>
 
                     <div className="flex justify-end pt-2">
