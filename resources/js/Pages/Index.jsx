@@ -425,10 +425,10 @@ export default function Index() {
                                             delay: 0.2 * index,
                                         }}
                                     >
-                                        <h3 className="text-2xl font-semibold text-gray-800 mb-8">
+                                        <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8 text-left border-b-2 border-purple-200 pb-4">
                                             {election.title}
                                         </h3>
-                                        <div className="flex flex-wrap gap-8 justify-center">
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                                             {election.candidates.map(
                                                 (candidate) => (
                                                     <CandidateCard

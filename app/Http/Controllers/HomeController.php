@@ -10,13 +10,11 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $elections = Election::where('status', 'active')
-            ->with('candidates')
-            ->orderBy('start_date', 'asc')
-            ->get();
+        $elections = Election::with('candidates')->where('status', 'active')->get();
 
         return Inertia::render('Index', [
             'elections' => $elections,
+            'activeElection' => $elections->first(),
         ]);
     }
 }
