@@ -21,8 +21,24 @@ class UserSeeder extends Seeder
 
         User::create([
             'id' => Str::uuid(),
-            'name' => 'Royhan Daffa',
+            'name' => 'Samsudin Bethoven II',
             'nim' => '1234',
+            'password' => Hash::make('taikucing'),
+            'role' => 'user',
+        ]);
+
+        User::create([
+            'id' => Str::uuid(),
+            'name' => 'Royhan Daffa',
+            'nim' => '140901',
+            'password' => Hash::make('taikucing'),
+            'role' => 'user',
+        ]);
+
+        User::create([
+            'id' => Str::uuid(),
+            'name' => 'Zakariah',
+            'nim' => '140902',
             'password' => Hash::make('taikucing'),
             'role' => 'user',
         ]);
