@@ -8,27 +8,28 @@ function ChartCard({
     selectedElection,
     setSelectedElection,
 }) {
+    const activeElections = elections.filter((e) => e.status === "active");
+
     return (
-        <div className="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
-            <div className="flex justify-between items-center mb-4">
-                <p className="font-semibold text-gray-800 dark:text-gray-300">
+        <>
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center mb-4 gap-4">
+                <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200">
                     {title}
-                </p>
-                <SelectInput
-                    key={selectedElection}
-                    value={selectedElection || ""}
-                    onChange={(e) => setSelectedElection(e.target.value)}
-                    options={elections
-                        .filter((election) => election.status === "active")
-                        .map((election) => ({
+                </h2>
+                {activeElections.length > 0 && (
+                    <SelectInput
+                        value={selectedElection || ""}
+                        onChange={(e) => setSelectedElection(e.target.value)}
+                        options={activeElections.map((election) => ({
                             value: election.id,
                             label: election.title,
                         }))}
-                    className="w-48"
-                />
+                        className="w-full sm:w-56 text-sm"
+                    />
+                )}
             </div>
             {children}
-        </div>
+        </>
     );
 }
 

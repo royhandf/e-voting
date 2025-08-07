@@ -1,6 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Chart } from "chart.js/auto";
 import ChartCard from "./ChartCard";
+import { hexToRgba } from "@/Utils/colors";
+import { IoStatsChartOutline } from "react-icons/io5";
 
 export default function ChartVote({
     elections,
@@ -8,57 +10,72 @@ export default function ChartVote({
 }) {
     const chartRef = useRef(null);
     const chartInstance = useRef(null);
-    const [selectedElection, setSelectedElection] = useState(
-        elections.length > 0 ? elections[0].id : ""
-    );
+
+    const [selectedElection, setSelectedElection] = useState(() => {
+        const activeElection = elections.find((e) => e.status === "active");
+        return activeElection
+            ? activeElection.id
+            : elections.length > 0
+            ? elections[0].id
+            : "";
+    });
+
     const [voteResults, setVoteResults] = useState(initialVoteResults);
 
-    const colors = [
-        "#FF6384",
-        "#36A2EB",
-        "#FFCE56",
-        "#4BC0C0",
-        "#9966FF",
-        "#FF9F40",
-    ];
+    const [isDarkMode, setIsDarkMode] = useState(
+        () =>
+            typeof window !== "undefined" &&
+            document.documentElement.classList.contains("dark")
+    );
 
     useEffect(() => {
-        const channel = window.Echo.channel("votes");
-        channel.listen(".VoteUpdated", (data) => {
-            setVoteResults((prevVotes) => {
-                const updatedVotes = [...prevVotes];
-
-                data.votes.forEach((updatedVote) => {
-                    const validVote = {
-                        candidate_name: updatedVote.candidate_name,
-                        votes: updatedVote.votes,
-                        election_id: updatedVote.election_id,
-                    };
-
-                    const existingVote = updatedVotes.find(
-                        (vote) =>
-                            vote.candidate_name === validVote.candidate_name &&
-                            vote.election_id === validVote.election_id
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === "class") {
+                    setIsDarkMode(
+                        document.documentElement.classList.contains("dark")
                     );
-
-                    if (existingVote) {
-                        existingVote.votes = validVote.votes;
-                    } else {
-                        updatedVotes.push(validVote);
-                    }
-                });
-
-                return updatedVotes;
+                }
             });
         });
 
-        return () => {
-            channel.stopListening(".VoteUpdated");
-        };
+        observer.observe(document.documentElement, { attributes: true });
+
+        return () => observer.disconnect();
     }, []);
 
+    const baseColors = [
+        "#4f46e5",
+        "#ec4899",
+        "#10b981",
+        "#f59e0b",
+        "#8b5cf6",
+        "#3b82f6",
+    ];
+
+    // Memisahkan data yang difilter ke dalam state tersendiri
+    const [filteredVotes, setFilteredVotes] = useState([]);
+
     useEffect(() => {
-        if (!chartRef.current || !selectedElection) return;
+        const filtered = voteResults
+            .filter((vote) => vote.election_id === selectedElection)
+            .sort((a, b) => b.votes - a.votes);
+        setFilteredVotes(filtered);
+    }, [selectedElection, voteResults]);
+
+    useEffect(() => {
+        // Jangan render chart jika tidak ada data atau canvas
+        if (
+            !chartRef.current ||
+            !selectedElection ||
+            filteredVotes.length === 0
+        ) {
+            if (chartInstance.current) {
+                chartInstance.current.destroy();
+                chartInstance.current = null;
+            }
+            return;
+        }
 
         if (chartInstance.current) {
             chartInstance.current.destroy();
@@ -66,9 +83,17 @@ export default function ChartVote({
 
         const ctx = chartRef.current.getContext("2d");
 
-        const filteredVotes = voteResults.filter(
-            (vote) => vote.election_id === selectedElection
-        );
+        const tickColor = isDarkMode ? "#d1d5db" : "#4b5563";
+        const gridColor = isDarkMode ? "#374151" : "#f3f4f6";
+
+        const backgroundColors = filteredVotes.map((_, index) => {
+            const color = baseColors[index % baseColors.length];
+            return hexToRgba(color, 0.75);
+        });
+
+        const borderColors = filteredVotes.map((_, index) => {
+            return baseColors[index % baseColors.length];
+        });
 
         chartInstance.current = new Chart(ctx, {
             type: "bar",
@@ -76,11 +101,15 @@ export default function ChartVote({
                 labels: filteredVotes.map((vote) => vote.candidate_name),
                 datasets: [
                     {
-                        label: "Total Votes",
+                        label: "Total Suara",
                         data: filteredVotes.map((vote) => vote.votes),
-                        backgroundColor: colors.slice(0, filteredVotes.length),
-                        borderColor: colors.slice(0, filteredVotes.length),
-                        borderWidth: 1,
+                        backgroundColor: backgroundColors,
+                        borderColor: borderColors,
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        borderSkipped: false,
+                        barPercentage: 0.5,
+                        categoryPercentage: 0.8,
                     },
                 ],
             },
@@ -88,12 +117,49 @@ export default function ChartVote({
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: { display: false },
+                    legend: {
+                        display: false,
+                    },
+                    tooltip: {
+                        enabled: true,
+                        backgroundColor: "#111827",
+                        titleFont: { size: 14, weight: "bold" },
+                        bodyFont: { size: 12 },
+                        padding: 12,
+                        cornerRadius: 8,
+                        displayColors: false,
+                        yAlign: "bottom",
+                        callbacks: {
+                            title: (tooltipItems) => tooltipItems[0].label,
+                            label: (context) =>
+                                `Total Suara: ${context.parsed.y.toLocaleString(
+                                    "id-ID"
+                                )}`,
+                        },
+                    },
                 },
                 scales: {
                     y: {
                         beginAtZero: true,
-                        ticks: { stepSize: 1, precision: 0 },
+                        ticks: {
+                            precision: 0,
+                            color: tickColor,
+                            font: { family: "Inter, sans-serif" },
+                        },
+                        grid: {
+                            color: gridColor,
+                            drawBorder: false,
+                        },
+                    },
+                    x: {
+                        ticks: {
+                            color: tickColor,
+                            font: {
+                                family: "Inter, sans-serif",
+                                weight: "500",
+                            },
+                        },
+                        grid: { display: false },
                     },
                 },
             },
@@ -102,19 +168,55 @@ export default function ChartVote({
         return () => {
             if (chartInstance.current) {
                 chartInstance.current.destroy();
+                chartInstance.current = null;
             }
         };
-    }, [selectedElection, voteResults]);
+    }, [filteredVotes, isDarkMode]);
+
+    useEffect(() => {
+        if (window.Echo) {
+            const channel = window.Echo.channel("votes");
+            channel.listen(".VoteUpdated", (data) => {
+                setVoteResults((prevVotes) => {
+                    const updatedVotes = [...prevVotes];
+                    data.votes.forEach((updatedVote) => {
+                        const existingVoteIndex = updatedVotes.findIndex(
+                            (v) =>
+                                v.candidate_name ===
+                                    updatedVote.candidate_name &&
+                                v.election_id === updatedVote.election_id
+                        );
+                        if (existingVoteIndex > -1)
+                            updatedVotes[existingVoteIndex] = updatedVote;
+                        else updatedVotes.push(updatedVote);
+                    });
+                    return updatedVotes;
+                });
+            });
+            return () => channel.stopListening(".VoteUpdated");
+        }
+    }, []);
 
     return (
         <ChartCard
-            title="Hasil Pemilihan"
+            title="Hasil Perolehan Suara"
             elections={elections}
             selectedElection={selectedElection}
             setSelectedElection={setSelectedElection}
         >
-            <div style={{ width: "100%", height: "400px" }}>
-                <canvas ref={chartRef} />
+            <div className="relative h-96">
+                {filteredVotes.length > 0 ? (
+                    <canvas ref={chartRef} />
+                ) : (
+                    <div className="flex flex-col items-center justify-center h-full text-gray-400 dark:text-gray-500">
+                        <IoStatsChartOutline className="w-16 h-16 mb-4" />
+                        <p className="text-lg font-medium">Belum Ada Suara</p>
+                        <p className="text-sm">
+                            Data akan muncul di sini setelah ada suara yang
+                            masuk.
+                        </p>
+                    </div>
+                )}
             </div>
         </ChartCard>
     );
