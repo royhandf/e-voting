@@ -23,21 +23,23 @@ export default function Modal({
     return (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4">
             <div
-                className={`bg-white rounded-lg shadow-lg ${widthClass} max-h-[90vh] overflow-y-auto`}
+                className={`bg-white dark:bg-gray-800 rounded-lg shadow-lg ${widthClass} max-h-[90vh] overflow-y-auto`}
             >
-                <div className="flex justify-between items-center pb-2 p-4 sticky top-0 bg-white">
-                    <h3 className="text-lg font-semibold text-gray-900">
+                <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                         {title}
                     </h3>
                     <button
                         onClick={onClose}
-                        className="text-gray-400 hover:text-gray-600"
+                        className="text-gray-400 hover:text-gray-600 dark:text-gray-400 dark:hover:text-gray-100"
                     >
                         <IoClose size={24} />
                     </button>
                 </div>
 
-                <div className="p-4 space-y-2 text-gray-700">{children}</div>
+                <div className="p-4 space-y-2 text-gray-700 dark:text-gray-300">
+                    {children}
+                </div>
             </div>
         </div>
     );
