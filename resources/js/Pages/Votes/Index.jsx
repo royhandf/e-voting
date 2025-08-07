@@ -54,12 +54,10 @@ const CandidateDetailContent = ({ candidate, onVote }) => (
 export default function Index() {
     const { elections, candidates, userVotes } = usePage().props;
     const [selectedCandidates, setSelectedCandidates] = useState({});
-
     const [detailViewState, setDetailViewState] = useState({
         isOpen: false,
         candidate: null,
     });
-
     const isDesktop = useMediaQuery("(min-width: 1024px)");
 
     const handleVote = (electionId, candidateId, candidateName) => {
