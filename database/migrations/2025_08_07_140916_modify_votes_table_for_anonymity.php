@@ -12,13 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('votes', function (Blueprint $table) {
-            Schema::table('votes', function (Blueprint $table) {
-                $table->dropUnique('votes_user_id_election_id_unique');
-                $table->dropConstrainedForeignId('user_id');
-                if (Schema::hasColumn('votes', 'vote_time')) {
-                    $table->dropColumn('vote_time');
-                }
-            });
+            $table->dropUnique('votes_user_id_election_id_unique');
+            $table->dropConstrainedForeignId('user_id');
+            if (Schema::hasColumn('votes', 'vote_time')) {
+                $table->dropColumn('vote_time');
+            }
         });
     }
 
