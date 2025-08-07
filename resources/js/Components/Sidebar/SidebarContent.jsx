@@ -6,7 +6,6 @@ import {
     IoPersonOutline,
     IoCheckboxOutline,
     IoDocumentTextOutline,
-    IoTimeOutline,
     IoShieldCheckmarkOutline,
 } from "react-icons/io5";
 
@@ -42,11 +41,6 @@ export const adminRoutes = [
 const userRoutes = [
     { name: "Dashboard", path: "/dashboard", icon: IoHomeOutline },
     { name: "Pemilihan", path: "/votes", icon: IoCheckboxOutline },
-    {
-        name: "Riwayat Pemilihan",
-        path: "/history",
-        icon: IoTimeOutline,
-    },
 ];
 
 function SidebarContent() {

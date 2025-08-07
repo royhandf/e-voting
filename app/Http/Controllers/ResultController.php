@@ -16,7 +16,6 @@ class ResultController extends Controller
     public function index(Request $request)
     {
         $elections = Election::where('status', 'closed')
-            ->orWhereNotNull('archived_at')
             ->orderBy('end_date', 'desc')
             ->get();
 

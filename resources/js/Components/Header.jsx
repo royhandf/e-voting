@@ -24,13 +24,13 @@ function Header() {
         const isDarkMode = document.documentElement.classList.contains("dark");
 
         Swal.fire({
-            title: "Are you sure?",
-            text: "You will be logged out!",
+            title: "Apakah Anda yakin?",
+            text: "Anda akan keluar dari akun ini!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#d33",
             cancelButtonColor: "#3085d6",
-            confirmButtonText: "Yes, log out!",
+            confirmButtonText: "Ya, keluar!",
             background: isDarkMode ? "#1a202c" : "#fff",
             color: isDarkMode ? "#fff" : "#000",
         }).then((result) => {

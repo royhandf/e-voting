@@ -7,6 +7,7 @@ use App\Models\Candidate;
 use App\Models\Election;
 use App\Models\Vote;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class VoteController extends Controller
@@ -17,19 +18,16 @@ class VoteController extends Controller
     public function index()
     {
         $user = auth()->user();
-    
-        $voteLogs = Vote::with(['user', 'candidate'])
-        ->latest()
-        ->get();
+
+        $availableElections = Election::where('status', 'active')
+            ->whereDoesntHave('voters', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->with('candidates')
+            ->get();
 
         return Inertia::render('Votes/Index', [
-            'elections' => Election::where('status', 'active')
-                ->whereDoesntHave('votes', function ($query) use ($user) {
-                    $query->where('user_id', $user->id);
-                })->get(),
-            'candidates' => Candidate::all(),
-            'userVotes' => Vote::where('user_id', $user->id)->pluck('election_id'),
-            'voteLogs' => $voteLogs
+            'elections' => $availableElections,
         ]);
     }
 
@@ -42,15 +40,28 @@ class VoteController extends Controller
             'candidate_id' => 'required|exists:candidates,id',
         ]);
 
-        if (Vote::hasUserVoted($user->id, $request->election_id)) {
-            return back()->withErrors(['message' => 'Anda sudah memberikan suara dalam pemilihan ini.']);
+        $election = Election::findOrFail($request->election_id);
+
+        if ($election->status !== 'active') {
+            return back()->with('error', 'Pemilihan ini tidak sedang aktif.');
         }
 
-        Vote::create([
-            'user_id' => $user->id,
-            'election_id' => $request->election_id,
-            'candidate_id' => $request->candidate_id,
-        ]);
+        if ($user->votedElections()->where('election_id', $election->id)->exists()) {
+            return back()->with('error', 'Anda sudah memberikan suara pada pemilihan ini.');
+        }
+
+        try {
+            DB::transaction(function () use ($request, $user, $election) {
+                Vote::create([
+                    'election_id'  => $election->id,
+                    'candidate_id' => $request->candidate_id,
+                ]);
+
+                $user->votedElections()->attach($election->id);
+            });
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan saat menyimpan suara. Silakan coba lagi.');
+        }
 
         $candidates = Candidate::where('election_id', $request->election_id)->get();
 
@@ -61,31 +72,15 @@ class VoteController extends Controller
 
         $formattedVotes = $candidates->map(function ($candidate) use ($votes) {
             $vote = $votes->firstWhere('candidate_id', $candidate->id);
-
             return [
                 'candidate_name' => $candidate->name,
-                'election_id' => $candidate->election_id,
-                'votes' => $vote ? $vote->count : 0,
+                'election_id'    => $candidate->election_id,
+                'votes'          => $vote ? $vote->count : 0,
             ];
         });
 
         broadcast(new VoteUpdated($formattedVotes));
 
-        return redirect()->back()->with('success', 'Vote berhasil disimpan.');
-    }
-
-
-    public function history()
-    {
-        $user = auth()->user();
-
-        $votes = Vote::with(['election', 'candidate'])
-            ->where('user_id', $user->id)
-            ->latest()
-            ->paginate(10);
-
-        return Inertia::render('Votes/History', [
-            'votes' => $votes
-        ]);
+        return redirect()->back()->with('success', 'Suara Anda berhasil disimpan. Terima kasih telah berpartisipasi!');
     }
 }

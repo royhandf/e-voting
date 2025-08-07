@@ -50,8 +50,8 @@ class User extends Authenticatable implements Auditable
         ];
     }
 
-    public function votes()
+    public function votedElections()
     {
-        return $this->hasMany(Vote::class);
+        return $this->belongsToMany(Election::class, 'election_user');
     }
 }

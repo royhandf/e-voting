@@ -15,8 +15,7 @@ class ElectionController extends Controller
      */
     public function index()
     {
-        $elections = Election::whereNull('archived_at')
-            ->orderBy('start_date', 'desc')
+        $elections = Election::orderBy('start_date', 'desc')
             ->paginate(10);
 
         return Inertia::render('Elections/Index', ['elections' => $elections]);

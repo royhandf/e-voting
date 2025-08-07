@@ -36,6 +36,11 @@ class Election extends Model implements Auditable
         return $this->hasMany(Vote::class);
     }
 
+    public function voters()
+    {
+        return $this->belongsToMany(User::class, 'election_user');
+    }
+
     public function getStartDateAttribute($value)
     {
         return Carbon::parse($value)->format('Y-m-d H:i:s');
@@ -44,16 +49,5 @@ class Election extends Model implements Auditable
     public function getEndDateAttribute($value)
     {
         return Carbon::parse($value)->format('Y-m-d H:i:s');
-    }
-
-    protected static function booted()
-    {
-        static::updated(function ($election) {
-            if ($election->isDirty('status') && $election->status === 'ended') {
-                Vote::where('election_id', $election->id)
-                    ->whereNotNull('user_id')
-                    ->update(['user_id' => null]);
-            }
-        });
     }
 }

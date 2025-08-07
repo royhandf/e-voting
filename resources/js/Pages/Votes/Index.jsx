@@ -8,6 +8,7 @@ import Modal from "@/Components/Modal";
 import BottomSheet from "@/Components/BottomSheet";
 import useMediaQuery from "@/Hooks/useMediaQuery";
 
+// Komponen ini tidak perlu diubah, sudah bagus.
 const CandidateDetailContent = ({ candidate, onVote }) => (
     <div>
         <div className="flex flex-col items-center text-center">
@@ -41,7 +42,7 @@ const CandidateDetailContent = ({ candidate, onVote }) => (
             </div>
         </div>
         <Button
-            className="w-full mt-8 py-3 text-lg font-bold bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-all duration-300 transform hover:scale-105"
+            className="w-full mt-8 py-3 text-md font-semibold bg-purple-600 text-white rounded-xl hover:bg-purple-700"
             onClick={() =>
                 onVote(candidate.election_id, candidate.id, candidate.name)
             }
@@ -52,7 +53,11 @@ const CandidateDetailContent = ({ candidate, onVote }) => (
 );
 
 export default function Index() {
-    const { elections, candidates, userVotes } = usePage().props;
+    // --- PERUBAHAN 1: Mengambil props ---
+    // Kita hanya menerima 'elections' dari controller.
+    // 'candidates' dan 'userVotes' sudah tidak ada lagi.
+    const { elections } = usePage().props;
+
     const [selectedCandidates, setSelectedCandidates] = useState({});
     const [detailViewState, setDetailViewState] = useState({
         isOpen: false,
@@ -60,6 +65,7 @@ export default function Index() {
     });
     const isDesktop = useMediaQuery("(min-width: 1024px)");
 
+    // Fungsi handleVote tidak perlu diubah, sudah benar.
     const handleVote = (electionId, candidateId, candidateName) => {
         setDetailViewState({ isOpen: false, candidate: null });
 
@@ -101,13 +107,15 @@ export default function Index() {
     };
 
     const handleCandidateClick = (candidate) => {
+        // Logika untuk memilih kandidat di UI, tidak perlu diubah
         setSelectedCandidates({ [candidate.election_id]: candidate.id });
         setDetailViewState({ isOpen: true, candidate: candidate });
     };
 
-    const availableElections = elections.filter(
-        (election) => !userVotes.includes(election.id)
-    );
+    // --- PERUBAHAN 2: Hapus filter manual ---
+    // Controller sudah mengirimkan data pemilihan yang BISA divote,
+    // jadi kita tidak perlu memfilternya lagi di sini.
+    // const availableElections = elections.filter(...); // HAPUS BARIS INI
 
     return (
         <AuthenticatedLayout>
@@ -116,7 +124,7 @@ export default function Index() {
                 Pemilihan Umum
             </h1>
 
-            {availableElections.length === 0 ? (
+            {elections.length === 0 ? (
                 <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-md">
                     <p className="font-bold">Terima Kasih!</p>
                     <p>
@@ -126,7 +134,8 @@ export default function Index() {
                 </div>
             ) : (
                 <div className="space-y-10">
-                    {availableElections.map((election) => (
+                    {/* Langsung gunakan 'elections' dari props */}
+                    {elections.map((election) => (
                         <div
                             key={election.id}
                             className="bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-4 md:p-6"
@@ -135,54 +144,50 @@ export default function Index() {
                                 {election.title}
                             </h2>
                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-5">
-                                {candidates
-                                    .filter(
-                                        (c) => c.election_id === election.id
-                                    )
-                                    .map((candidate) => (
-                                        <div
-                                            key={candidate.id}
-                                            onClick={() =>
-                                                handleCandidateClick(candidate)
-                                            }
-                                            className={`rounded-2xl overflow-hidden cursor-pointer group transition-all duration-300 ${
-                                                selectedCandidates[
-                                                    election.id
-                                                ] === candidate.id
-                                                    ? "ring-4 ring-purple-500"
-                                                    : "ring-1 ring-gray-200 dark:ring-gray-700 hover:ring-purple-400 hover:shadow-xl"
-                                            }`}
-                                        >
-                                            <div className="relative">
-                                                <img
-                                                    src={candidate.photo_url}
-                                                    alt={candidate.name}
-                                                    className="w-full aspect-[3/4] object-cover transition-transform duration-300 group-hover:scale-105"
-                                                />
-                                                {selectedCandidates[
-                                                    election.id
-                                                ] === candidate.id && (
-                                                    <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                                                        <IoCheckmarkCircle
-                                                            size={48}
-                                                            className="text-white drop-shadow-lg"
-                                                        />
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <div className="p-3 text-center bg-gray-50 dark:bg-gray-900/50">
-                                                <h3 className="font-bold text-sm md:text-base text-gray-900 dark:text-gray-100 truncate">
-                                                    {candidate.name}
-                                                </h3>
-                                            </div>
+                                {/* --- PERUBAHAN 3: Ambil kandidat dari 'election.candidates' --- */}
+                                {election.candidates.map((candidate) => (
+                                    <div
+                                        key={candidate.id}
+                                        onClick={() =>
+                                            handleCandidateClick(candidate)
+                                        }
+                                        className={`rounded-2xl overflow-hidden cursor-pointer group transition-all duration-300 ${
+                                            selectedCandidates[election.id] ===
+                                            candidate.id
+                                                ? "ring-4 ring-purple-500"
+                                                : "ring-1 ring-gray-200 dark:ring-gray-700 hover:ring-purple-400 hover:shadow-xl"
+                                        }`}
+                                    >
+                                        <div className="relative">
+                                            <img
+                                                src={candidate.photo_url}
+                                                alt={candidate.name}
+                                                className="w-full aspect-[3/4] object-cover transition-transform duration-300 group-hover:scale-105"
+                                            />
+                                            {selectedCandidates[election.id] ===
+                                                candidate.id && (
+                                                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                                                    <IoCheckmarkCircle
+                                                        size={48}
+                                                        className="text-white drop-shadow-lg"
+                                                    />
+                                                </div>
+                                            )}
                                         </div>
-                                    ))}
+                                        <div className="p-3 text-center bg-gray-50 dark:bg-gray-900/50">
+                                            <h3 className="font-bold text-sm md:text-base text-gray-900 dark:text-gray-100 truncate">
+                                                {candidate.name}
+                                            </h3>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     ))}
                 </div>
             )}
 
+            {/* Bagian Modal dan BottomSheet tidak perlu diubah */}
             {isDesktop ? (
                 <Modal
                     title="Detail Kandidat"

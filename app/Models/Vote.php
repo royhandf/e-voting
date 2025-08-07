@@ -13,20 +13,9 @@ class Vote extends Model implements Auditable
     use HasFactory, HasUuids, AuditableTrait;
 
     protected $fillable = [
-        'user_id',
         'candidate_id',
         'election_id',
-        'vote_time',
     ];
-
-    protected $casts = [
-        'vote_time' => 'datetime',
-    ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
 
     public function candidate()
     {
