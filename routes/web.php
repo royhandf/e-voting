@@ -30,7 +30,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
 Route::middleware(['auth', 'user'])->group(function () {
     Route::get('/votes', [VoteController::class, 'index'])->name('votes.index');
-    Route::post('/vote', [VoteController::class, 'store'])->name('vote.store');
+    Route::get('/results', [ResultController::class, 'show'])->name('results.show');
 });
 
 require __DIR__ . '/auth.php';

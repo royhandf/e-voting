@@ -41,6 +41,11 @@ export const adminRoutes = [
 const userRoutes = [
     { name: "Dashboard", path: "/dashboard", icon: IoHomeOutline },
     { name: "Pemilihan", path: "/votes", icon: IoCheckboxOutline },
+    {
+        name: "Hasil Pemilihan",
+        path: "/results",
+        icon: IoDocumentTextOutline,
+    },
 ];
 
 function SidebarContent() {
